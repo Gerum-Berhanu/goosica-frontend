@@ -1,0 +1,55 @@
+@import url('https://fonts.googleapis.com/css2?family=Tagesschrift&display=swap');
+@import "tailwindcss";
+
+* {
+  font-family: "Tagesschrift";
+}
+
+@layer base {
+  /* Chrome, Edge, and Safari */
+  ::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+}
+
+@layer base {
+
+  /* Target the root (html), the body, and every single element (*) */
+  ::-webkit-scrollbar,
+  *::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+    /* For horizontal scrollbars */
+  }
+
+  ::-webkit-scrollbar-track,
+  *::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb,
+  *::-px-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover,
+  *::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+
+}

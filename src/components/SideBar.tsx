@@ -1,0 +1,25 @@
+import { Card } from "./CardRow";
+import { LyricsBody } from "./LyricsBody";
+
+export default function SideBar() {
+    return (
+      <div className="bg-slate-200 border-r md:flex flex-col gap-4 hidden p-4 md:w-1/3 lg:w-1/4">
+        {/* ROW 1 - Logo and app name */}
+        <div className="flex gap-2 items-center justify-center">
+          <img src="./logo-light.png" alt="Goosica Light Logo" width="50" />
+          <span className="text-3xl">Goosica</span>
+        </div>
+
+        {/* ROW 2 - Now playing card */}
+        <div>
+          <Card title="Love to Lay" uploader="The Weeknd" imageWidth="100%" />
+        </div>
+
+        {/* ROW 3 - Lyrics */}
+        <div className="flex flex-col flex-auto gap-4 overflow-y-auto">
+          <span className="text-3xl">Lyrics</span>
+          <LyricsBody />
+        </div>
+      </div>
+    );
+}
