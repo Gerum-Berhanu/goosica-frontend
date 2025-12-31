@@ -1,6 +1,6 @@
 export function LyricsBody() {
     return (
-      <div className="bg-zinc-50 border-2 flex-auto overflow-y-auto p-4 w-full">
+      <div className="bg-zinc-50 flex-auto overflow-y-auto rounded-xl p-4 w-full">
           It's close to midnight
           <br />
           Something evil's lurking in the dark

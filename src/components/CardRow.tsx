@@ -14,9 +14,11 @@ interface DropdownProps {
 }
 
 export function Dropdown({ onClick }: DropdownProps) {
-  // const dropdownList = ["Add to Favorites", "Add to Queue", "Add to Playlist", "Share", "Download"];
+  const dropdownList = ["Add to Favorites", "Add to Queue", "Add to Playlist", "Share", "Download"];
+
   return (
-    <div className="absolute bg-slate-200 border-2 divide-y-2 flex flex-col w-[125px] z-20">
+    <div className="absolute bg-zinc-50 border divide-y-2 flex flex-col rounded-xl shadow-md/25 w-[125px] z-20">
+
       <div className="p-1 w-full">
         <X
           className="cursor-pointer"
@@ -26,11 +28,11 @@ export function Dropdown({ onClick }: DropdownProps) {
           size="16"
         />
       </div>
-      <span className="cursor-pointer p-1 text-xs">Add to Favorites</span>
-      <span className="cursor-pointer p-1 text-xs">Add to Queue</span>
-      <span className="cursor-pointer p-1 text-xs">Add to Playlist</span>
-      <span className="cursor-pointer p-1 text-xs">Share</span>
-      <span className="cursor-pointer p-1 text-xs">Download</span>
+
+      {dropdownList.map((item) => (
+        <span className="cursor-pointer p-1 text-xs">{item}</span>
+      ))}
+
     </div>
   );
 }
@@ -72,7 +74,7 @@ export function Card({
     <div
     ref={containerRef}
       className={
-        "border-2 flex flex-col shrink-0 " + (cardWidth || "w-[250px]") + " overflow-x-hidden " + (isHovered && "shadow-xl")
+        "bg-zinc-50 flex flex-col rounded-xl shadow-md/25 shrink-0 " + (cardWidth || "w-[250px]") + " overflow-x-hidden " + (isHovered && "shadow-xl")
       }
     >
       {/* ROW 1 - Thumbnail display */}
@@ -161,7 +163,7 @@ export default function CardRow({ title }: CardRowProps) {
     <div className="flex flex-col gap-4">
       {/* ROW 1 - Title */}
       <div>
-        <span className="text-3xl">{title}</span>
+        <span className="text-3xl text-shadow-md/20">{title}</span>
       </div>
 
       {/* ROW 2 - Card set */}
