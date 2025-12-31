@@ -2,6 +2,7 @@ import {
   ArrowLeftToLine,
   ArrowRightToLine,
   EllipsisVertical,
+  Pause,
   Play,
   X,
 } from "lucide-react";
@@ -64,6 +65,8 @@ export function Card({
 
         setShouldMarquee(text.scrollWidth > container.clientWidth);
     }, [title]);
+    
+    const [onPlay, setOnPlay] = useState(false);
 
   return (
     <div
@@ -100,7 +103,13 @@ export function Card({
           }
         >
           <ArrowLeftToLine className="cursor-pointer" stroke="white" />
-          <Play className="cursor-pointer" stroke="white" />
+          {
+            onPlay ? (
+                <Pause className="cursor-pointer" onClick={()=>{setOnPlay(false)}} stroke="white" />
+            ) : (
+                <Play className="cursor-pointer" onClick={()=>{setOnPlay(true)}} stroke="white" />
+            )
+          }
           <ArrowRightToLine className="cursor-pointer" stroke="white" />
         </div>
 
