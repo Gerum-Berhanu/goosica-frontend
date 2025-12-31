@@ -11,8 +11,8 @@ export default function SideBar() {
         </div>
 
         {/* ROW 2 - Now playing card */}
-        <div>
-          <Card title="Love to Lay" uploader="The Weeknd" imageWidth="100%" />
+        <div className="flex">
+          <Card title="Love to Lay" uploader="The Weeknd" cardWidth="w-full" imagePath="./starboy-album-thumbnail.jpg" imageHeight="100%" />
         </div>
 
         {/* ROW 3 - Lyrics */}

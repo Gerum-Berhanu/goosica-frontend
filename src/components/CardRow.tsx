@@ -5,48 +5,62 @@ import {
   Play,
   X,
 } from "lucide-react";
+import Marquee from "react-fast-marquee";
 import { useState } from "react";
 
 interface DropdownProps {
-    onClick: (newValue: boolean)=>void;
+  onClick: (newValue: boolean) => void;
 }
 
 export function Dropdown({ onClick }: DropdownProps) {
-    // const dropdownList = ["Add to Favorites", "Add to Queue", "Add to Playlist", "Share", "Download"];
-    return (
-      <div className="absolute bg-slate-200 border-2 divide-y-2 flex flex-col w-[125px] z-20">
-        <div className="p-1 w-full">
-          <X className="cursor-pointer" onClick={()=>{onClick(false)}} size="16" />
-        </div>
-        <span className="cursor-pointer p-1 text-xs">Add to Favorites</span>
-        <span className="cursor-pointer p-1 text-xs">Add to Queue</span>
-        <span className="cursor-pointer p-1 text-xs">Add to Playlist</span>
-        <span className="cursor-pointer p-1 text-xs">Share</span>
-        <span className="cursor-pointer p-1 text-xs">Download</span>
+  // const dropdownList = ["Add to Favorites", "Add to Queue", "Add to Playlist", "Share", "Download"];
+  return (
+    <div className="absolute bg-slate-200 border-2 divide-y-2 flex flex-col w-[125px] z-20">
+      <div className="p-1 w-full">
+        <X
+          className="cursor-pointer"
+          onClick={() => {
+            onClick(false);
+          }}
+          size="16"
+        />
       </div>
-    );
+      <span className="cursor-pointer p-1 text-xs">Add to Favorites</span>
+      <span className="cursor-pointer p-1 text-xs">Add to Queue</span>
+      <span className="cursor-pointer p-1 text-xs">Add to Playlist</span>
+      <span className="cursor-pointer p-1 text-xs">Share</span>
+      <span className="cursor-pointer p-1 text-xs">Download</span>
+    </div>
+  );
 }
 
 interface CardProps {
   title: string;
   uploader: string;
-  imagePath?: string;
-  imageWidth?: string;
+  cardWidth?: string;
+  imagePath: string;
+  imageHeight?: string;
 }
 
-export function Card({ title, uploader, imageWidth = "250px" }: CardProps) {
+export function Card({
+  title,
+  uploader,
+  cardWidth,
+  imagePath,
+  imageHeight = "150px",
+}: CardProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [isEllipsisClicked, setEllipsisClicked] = useState(false);
 
   return (
     <div
       className={
-        "border-2 flex flex-col flex-none " + (isHovered && "shadow-xl")
+        "border-2 flex flex-col shrink-0 " + (cardWidth || "w-[250px]") + " overflow-x-hidden " + (isHovered && "shadow-xl")
       }
     >
       {/* ROW 1 - Thumbnail display */}
       <div
-        className="relative"
+        className="grid grid-rows-1 relative"
         onMouseEnter={() => {
           setIsHovered(true);
         }}
@@ -54,14 +68,16 @@ export function Card({ title, uploader, imageWidth = "250px" }: CardProps) {
           setIsHovered(false);
         }}
       >
-
         <EllipsisVertical
           className="absolute cursor-pointer z-20"
-          onClick={() => {setEllipsisClicked(true)}}
+          onClick={() => {
+            setEllipsisClicked(true);
+          }}
           stroke="white"
         />
 
-        {isEllipsisClicked && <Dropdown onClick={setEllipsisClicked}/>}
+        {/* Dropdown list feature is implemented here */}
+        {isEllipsisClicked && <Dropdown onClick={setEllipsisClicked} />}
 
         <div
           className={
@@ -74,17 +90,21 @@ export function Card({ title, uploader, imageWidth = "250px" }: CardProps) {
           <ArrowRightToLine className="cursor-pointer" stroke="white" />
         </div>
 
-        <img
-          src="./starboy-album-thumbnail.jpg"
-          alt="Music Thumbnail"
-          className={"w-[" + imageWidth + "]"}
-        />
-
+        <div className="bg-black w-full">
+          <img
+            src={imagePath}
+            alt="Music Thumbnail"
+            style={{ height: imageHeight }}
+            className={"object-contain place-self-center w-auto"}
+          />
+        </div>
       </div>
 
       {/* ROW 2 - Title and uploader display */}
-      <div className="flex flex-col gap-2 items-center justify-center p-2 w-full">
-        <span className="text-xl">{title}</span>
+      <div className="flex flex-col flex-nowrap gap-2 items-center justify-center p-2">
+        <Marquee gradient={false} speed={50} pauseOnHover={true}>
+          <span className="text-xl px-4">{title}</span>
+        </Marquee>
         <span className="text-sm">{uploader}</span>
       </div>
     </div>
@@ -96,6 +116,17 @@ interface CardRowProps {
 }
 
 export default function CardRow({ title }: CardRowProps) {
+    const songList = [
+        {"title": "Beat It", "uploader": "Michael Jackson", "imagePath": "./beat-it-thumbnail.jpg"},
+        {"title": "Thriller", "uploader": "Michael Jackson", "imagePath": "./thriller-thumbnail.jpg"},
+        {"title": "Don't Stop Till You Get Enough", "uploader": "Michael Jackson", "imagePath": "./off-the-wall-album-thumbnail.jpg"},
+        {"title": "Lonely Night", "uploader": "The Weeknd", "imagePath": "./starboy-album-thumbnail.jpg"},
+        {"title": "Starboy", "uploader": "The Weeknd", "imagePath": "./starboy-album-thumbnail.jpg"},
+        {"title": "Love to Lay", "uploader": "The Weeknd", "imagePath": "./starboy-album-thumbnail.jpg"},
+        {"title": "Love to Lay", "uploader": "The Weeknd", "imagePath": "./starboy-album-thumbnail.jpg"},
+        {"title": "Love to Lay", "uploader": "The Weeknd", "imagePath": "./starboy-album-thumbnail.jpg"},
+    ];
+
   return (
     <div className="flex flex-col gap-4">
       {/* ROW 1 - Title */}
@@ -105,12 +136,14 @@ export default function CardRow({ title }: CardRowProps) {
 
       {/* ROW 2 - Card set */}
       <div className="flex gap-4 overflow-x-auto pb-2">
-        <Card title="Love to Lay" uploader="The Weeknd" />
-        <Card title="Lonely Night" uploader="The Weeknd" />
-        <Card title="Starboy" uploader="The Weeknd" />
-        <Card title="Feel It Coming" uploader="The Weeknd" />
-        <Card title="Love to Lay" uploader="The Weeknd" />
-        <Card title="Love to Lay" uploader="The Weeknd" />
+      {songList.map(item =>
+          <Card
+            key={item["title"]}
+            title={item["title"]}
+            uploader={item["uploader"]}
+            imagePath={item["imagePath"]}
+          />
+        )}
       </div>
     </div>
   );
