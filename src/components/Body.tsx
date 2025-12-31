@@ -1,7 +1,7 @@
-import CardSet from "./CardSet";
-import SearchBar from "./SearchBar";
+import {CardSet, generateId} from "./CardSet";
+import {SearchBar} from "./SearchBar";
 
-export default function Body() {
+export function Body() {
     const CardSetTitles = ["Today's Pick", "Queue", "Favorites", "Downloads"];
     
     return (
@@ -10,7 +10,7 @@ export default function Body() {
             <div className="overflow-y-auto px-2 md:px-8 py-8">
                 <div className="flex flex-col gap-8">
                     {CardSetTitles.map(item =>
-                        <CardSet key={crypto.randomUUID()} title={item}/>
+                        <CardSet key={generateId()} title={item}/>
                     )}
                 </div>
             </div>

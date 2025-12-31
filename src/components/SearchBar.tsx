@@ -1,6 +1,6 @@
 import { Moon, Search } from "lucide-react";
 
-export default function SearchBar() {
+export function SearchBar() {
     return (
       <div className="grid grid-cols-5 items-center p-4 shadow-md/25 w-full">
         {/* COLUMN 1 - Search area */}

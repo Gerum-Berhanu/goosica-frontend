@@ -9,6 +9,14 @@ import {
 import Marquee from "react-fast-marquee";
 import { useLayoutEffect, useRef, useState } from "react";
 
+export const generateId = () => {
+  return (
+    "id-" +
+    Math.random().toString(36).substring(2, 11) +
+    Date.now().toString(36)
+  );
+}
+
 interface DropdownProps {
   onClick: (newValue: boolean) => void;
 }
@@ -30,7 +38,7 @@ export function Dropdown({ onClick }: DropdownProps) {
       </div>
 
       {dropdownList.map((item) => (
-        <span key={crypto.randomUUID()} className="cursor-pointer p-1 text-xs">{item}</span>
+        <span key={generateId()} className="cursor-pointer p-1 text-xs">{item}</span>
       ))}
 
     </div>
@@ -147,7 +155,7 @@ interface CardSetProps {
   title: string;
 }
 
-export default function CardSet({ title }: CardSetProps) {
+export function CardSet({ title }: CardSetProps) {
     const songList = [
         {"title": "Beat It", "uploader": "Michael Jackson", "imagePath": "./beat-it-thumbnail.jpg"},
         {"title": "Thriller", "uploader": "Michael Jackson", "imagePath": "./thriller-thumbnail.jpg"},
@@ -170,7 +178,7 @@ export default function CardSet({ title }: CardSetProps) {
       <div className="flex gap-4 overflow-x-auto pb-2">
       {songList.map(item =>
           <Card
-            key={crypto.randomUUID()}
+            key={generateId()}
             title={item["title"]}
             uploader={item["uploader"]}
             imagePath={item["imagePath"]}

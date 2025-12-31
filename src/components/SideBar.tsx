@@ -1,7 +1,7 @@
 import { Card } from "./CardSet";
 import { LyricsBody } from "./LyricsBody";
 
-export default function SideBar() {
+export function SideBar() {
     return (
       <div className="bg-slate-200 md:flex flex-col gap-4 hidden p-4 md:w-1/3 lg:w-1/4">
         {/* ROW 1 - Logo and app name */}
