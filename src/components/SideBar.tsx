@@ -1,4 +1,4 @@
-import { Card } from "./CardRow";
+import { Card } from "./CardSet";
 import { LyricsBody } from "./LyricsBody";
 
 export default function SideBar() {
