@@ -6,7 +6,7 @@ import {
   X,
 } from "lucide-react";
 import Marquee from "react-fast-marquee";
-import { useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 
 interface DropdownProps {
   onClick: (newValue: boolean) => void;
@@ -52,8 +52,22 @@ export function Card({
   const [isHovered, setIsHovered] = useState(false);
   const [isEllipsisClicked, setEllipsisClicked] = useState(false);
 
+    const containerRef = useRef<HTMLDivElement>(null);
+    const textRef = useRef<HTMLSpanElement>(null);
+    const [shouldMarquee, setShouldMarquee] = useState(false);
+
+    useLayoutEffect(() => {
+        const container = containerRef.current;
+        const text = textRef.current;
+
+        if (!container || !text) return;
+
+        setShouldMarquee(text.scrollWidth > container.clientWidth);
+    }, [title]);
+
   return (
     <div
+    ref={containerRef}
       className={
         "border-2 flex flex-col shrink-0 " + (cardWidth || "w-[250px]") + " overflow-x-hidden " + (isHovered && "shadow-xl")
       }
@@ -101,12 +115,19 @@ export function Card({
       </div>
 
       {/* ROW 2 - Title and uploader display */}
-      <div className="flex flex-col flex-nowrap gap-2 items-center justify-center p-2">
-        <Marquee gradient={false} speed={50} pauseOnHover={true}>
-          <span className="text-xl px-4">{title}</span>
-        </Marquee>
-        <span className="text-sm">{uploader}</span>
-      </div>
+      {shouldMarquee ? (
+        <div className="flex flex-col flex-nowrap gap-2 items-center justify-center p-2">
+            <Marquee gradient={false} speed={50} pauseOnHover={true}>
+                <span ref={textRef} className="text-xl px-4 whitespace-nowrap">{title}</span>
+            </Marquee>
+            <span className="text-sm">{uploader}</span>
+        </div>
+      ) : (
+        <div className="flex flex-col flex-nowrap gap-2 items-center justify-center p-2">
+            <span ref={textRef} className="text-xl px-4 whitespace-nowrap">{title}</span>
+            <span className="text-sm">{uploader}</span>
+        </div>
+      )}
     </div>
   );
 }
