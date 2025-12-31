@@ -30,7 +30,7 @@ export function Dropdown({ onClick }: DropdownProps) {
       </div>
 
       {dropdownList.map((item) => (
-        <span key={item} className="cursor-pointer p-1 text-xs">{item}</span>
+        <span key={crypto.randomUUID()} className="cursor-pointer p-1 text-xs">{item}</span>
       ))}
 
     </div>
@@ -170,7 +170,7 @@ export default function CardSet({ title }: CardSetProps) {
       <div className="flex gap-4 overflow-x-auto pb-2">
       {songList.map(item =>
           <Card
-            key={item["title"]}
+            key={crypto.randomUUID()}
             title={item["title"]}
             uploader={item["uploader"]}
             imagePath={item["imagePath"]}

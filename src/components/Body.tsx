@@ -7,10 +7,10 @@ export default function Body() {
     return (
         <div className="bg-slate-200 flex flex-col h-full overflow-y-auto w-full md:w-2/3 lg:w-3/4">
             <SearchBar/>
-            <div className="overflow-y-auto p-8">
+            <div className="overflow-y-auto px-2 md:px-8 py-8">
                 <div className="flex flex-col gap-8">
                     {CardSetTitles.map(item =>
-                        <CardSet key={item} title={item}/>
+                        <CardSet key={crypto.randomUUID()} title={item}/>
                     )}
                 </div>
             </div>
