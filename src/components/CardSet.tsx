@@ -8,14 +8,7 @@ import {
 } from "lucide-react";
 import Marquee from "react-fast-marquee";
 import { useLayoutEffect, useRef, useState } from "react";
-
-export const generateId = () => {
-  return (
-    "id-" +
-    Math.random().toString(36).substring(2, 11) +
-    Date.now().toString(36)
-  );
-}
+import {generateId} from "./devToolkit"
 
 interface DropdownProps {
   onClick: (newValue: boolean) => void;
