@@ -1,7 +1,7 @@
 import { useState } from "react";
-import {CardSetContainer} from "./CardSet";
-import {SearchBar} from "./SearchBar";
-import { SearchResult } from "./SearchResult";
+import {CardSetContainer} from "../sections/CardSet";
+import {NavBar} from "../sections/NavBar";
+import { SearchResult } from "../sections/SearchResult";
 
 export function Body() {
     const [ isSearched, setIsSearched ] = useState(false);
@@ -17,7 +17,7 @@ export function Body() {
 
     return (
       <div className="bg-slate-200 flex flex-col h-full overflow-y-auto w-full md:w-2/3 lg:w-3/4">
-        <SearchBar onSearch={handleSearch}/>
+        <NavBar onSearch={handleSearch}/>
         <div className="h-full overflow-y-auto">
           {isSearched ? (
             // SearchResult

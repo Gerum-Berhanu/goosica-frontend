@@ -1,11 +1,11 @@
 import { Moon, Search } from "lucide-react";
 import { useRef } from "react";
 
-interface SearchBarProps {
+interface NavBarProps {
   onSearch: (query: string | undefined)=>void;
 }
 
-export function SearchBar({ onSearch }: SearchBarProps) {
+export function NavBar({ onSearch }: NavBarProps) {
     const searchInput = useRef<HTMLInputElement>(null);
 
     return (

@@ -1,5 +1,5 @@
-import { Card } from "./CardSet";
-import { generateId } from "./devToolkit";
+import { Card } from "../ui/Card";
+import { generateId } from "../utils/devToolkit";
 
 export function SearchResult() {
     return (

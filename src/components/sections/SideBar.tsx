@@ -1,5 +1,5 @@
-import { Card } from "./CardSet";
-import { LyricsBody } from "./LyricsBody";
+import { Card } from "../ui/Card";
+import { LyricsBody } from "../ui/LyricsBody";
 
 export function SideBar() {
     return (
