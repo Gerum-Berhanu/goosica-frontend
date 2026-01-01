@@ -1,6 +1,5 @@
 import { useState } from "react";
 import {CardSet} from "./CardSet";
-import { generateId } from "./devToolkit";
 import {SearchBar} from "./SearchBar";
 import { SearchResult } from "./SearchResult";
 
@@ -27,8 +26,8 @@ export function Body() {
           ) : (
             // CardSet
             <div className="flex flex-col gap-8 px-2 md:px-8 py-8">
-              {CardSetTitles.map((item) => (
-                <CardSet key={generateId()} title={item} />
+              {CardSetTitles.map((item, index) => (
+                <CardSet key={`${index}-${item}`} title={item} />
               ))}
             </div>
           )}

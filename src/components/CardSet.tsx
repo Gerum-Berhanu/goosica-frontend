@@ -8,7 +8,6 @@ import {
 } from "lucide-react";
 import Marquee from "react-fast-marquee";
 import { useLayoutEffect, useRef, useState } from "react";
-import {generateId} from "./devToolkit"
 
 interface DropdownProps {
   onClick: (newValue: boolean) => void;
@@ -30,8 +29,8 @@ export function Dropdown({ onClick }: DropdownProps) {
         />
       </div>
 
-      {dropdownList.map((item) => (
-        <span key={generateId()} className="cursor-pointer p-1 text-xs">{item}</span>
+      {dropdownList.map((item, index) => (
+        <span key={`${index}-${item}`} className="cursor-pointer p-1 text-xs">{item}</span>
       ))}
 
     </div>
@@ -150,14 +149,14 @@ interface CardSetProps {
 
 export function CardSet({ title }: CardSetProps) {
     const songList = [
-        {"title": "Beat It", "uploader": "Michael Jackson", "imagePath": "./beat-it-thumbnail.jpg"},
-        {"title": "Thriller", "uploader": "Michael Jackson", "imagePath": "./thriller-thumbnail.jpg"},
-        {"title": "Don't Stop Till You Get Enough", "uploader": "Michael Jackson", "imagePath": "./off-the-wall-album-thumbnail.jpg"},
-        {"title": "Lonely Night", "uploader": "The Weeknd", "imagePath": "./starboy-album-thumbnail.jpg"},
-        {"title": "Starboy", "uploader": "The Weeknd", "imagePath": "./starboy-album-thumbnail.jpg"},
-        {"title": "Love to Lay", "uploader": "The Weeknd", "imagePath": "./starboy-album-thumbnail.jpg"},
-        {"title": "Love to Lay", "uploader": "The Weeknd", "imagePath": "./starboy-album-thumbnail.jpg"},
-        {"title": "Love to Lay", "uploader": "The Weeknd", "imagePath": "./starboy-album-thumbnail.jpg"},
+        {"id": "A101", "title": "Beat It", "uploader": "Michael Jackson", "imagePath": "./beat-it-thumbnail.jpg"},
+        {"id": "A102", "title": "Thriller", "uploader": "Michael Jackson", "imagePath": "./thriller-thumbnail.jpg"},
+        {"id": "A103", "title": "Don't Stop Till You Get Enough", "uploader": "Michael Jackson", "imagePath": "./off-the-wall-album-thumbnail.jpg"},
+        {"id": "A104", "title": "Lonely Night", "uploader": "The Weeknd", "imagePath": "./starboy-album-thumbnail.jpg"},
+        {"id": "A105", "title": "Starboy", "uploader": "The Weeknd", "imagePath": "./starboy-album-thumbnail.jpg"},
+        {"id": "A106", "title": "Love to Lay", "uploader": "The Weeknd", "imagePath": "./starboy-album-thumbnail.jpg"},
+        {"id": "A107", "title": "Love to Lay", "uploader": "The Weeknd", "imagePath": "./starboy-album-thumbnail.jpg"},
+        {"id": "A108", "title": "Love to Lay", "uploader": "The Weeknd", "imagePath": "./starboy-album-thumbnail.jpg"},
     ];
 
   return (
@@ -171,7 +170,7 @@ export function CardSet({ title }: CardSetProps) {
       <div className="flex gap-4 overflow-x-auto pb-2">
       {songList.map(item =>
           <Card
-            key={generateId()}
+            key={item["id"]}
             title={item["title"]}
             uploader={item["uploader"]}
             imagePath={item["imagePath"]}
