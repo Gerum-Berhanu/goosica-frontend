@@ -1,10 +1,9 @@
 import { useState } from "react";
-import {CardSet} from "./CardSet";
+import {CardSetContainer} from "./CardSet";
 import {SearchBar} from "./SearchBar";
 import { SearchResult } from "./SearchResult";
 
 export function Body() {
-    const CardSetTitles = ["Today's Pick", "Queue", "Favorites", "Downloads"];
     const [ isSearched, setIsSearched ] = useState(false);
 
     const handleSearch = (query: string | undefined) => {
@@ -25,11 +24,7 @@ export function Body() {
             <SearchResult />
           ) : (
             // CardSet
-            <div className="flex flex-col gap-8 px-2 md:px-8 py-8">
-              {CardSetTitles.map((item, index) => (
-                <CardSet key={`${index}-${item}`} title={item} />
-              ))}
-            </div>
+            <CardSetContainer />
           )}
         </div>
       </div>

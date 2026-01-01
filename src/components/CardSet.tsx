@@ -180,3 +180,15 @@ export function CardSet({ title }: CardSetProps) {
     </div>
   );
 }
+
+export function CardSetContainer() {
+  const CardSetTitles = ["Today's Pick", "Queue", "Favorites", "Downloads"];
+
+  return (
+    <div className="flex flex-col gap-8 px-2 md:px-8 py-8">
+      {CardSetTitles.map((item, index) => (
+        <CardSet key={`${index}-${item}`} title={item} />
+      ))}
+    </div>
+  );
+}
