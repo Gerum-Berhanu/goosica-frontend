@@ -63,13 +63,14 @@ export function Card({
           setIsHovered(false);
         }}
       >
-        <EllipsisVertical
+        <button
           className="absolute cursor-pointer z-20"
           onClick={() => {
             setEllipsisClicked(true);
           }}
-          stroke="white"
-        />
+        >
+          <EllipsisVertical stroke="white" />
+        </button>
 
         {/* DropDown list feature is implemented here */}
         {isEllipsisClicked && <DropDown onClick={setEllipsisClicked} />}

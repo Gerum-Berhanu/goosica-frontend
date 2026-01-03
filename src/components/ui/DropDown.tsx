@@ -31,21 +31,28 @@ export function DropDown({ onClick }: DropDownProps) {
   }, [onClick]);
 
   return (
-    <div ref={dropdownRef} className="absolute bg-zinc-50 border flex flex-col gap-2 p-2 rounded-xl shadow-md/25 w-[125px] z-20">
+    <div
+      ref={dropdownRef}
+      className="absolute bg-zinc-50 border flex flex-col gap-2 p-2 rounded-xl shadow-md/25 w-[125px] z-20"
+    >
       <div className="p-1 w-full">
-        <X
+        <button
           className="cursor-pointer"
           onClick={() => {
             onClick(false);
           }}
-          size="16"
-        />
+        >
+          <X size="16" />
+        </button>
       </div>
 
       {dropdownList.map((item, index) => (
-        <span key={`${index}-${item}`} className="hover:bg-zinc-200 border-y cursor-pointer p-1 rounded-xl text-xs">
+        <button
+          key={`${index}-${item}`}
+          className="hover:bg-zinc-200 border-y cursor-pointer p-1 rounded-xl text-xs"
+        >
           {item}
-        </span>
+        </button>
       ))}
     </div>
   );
