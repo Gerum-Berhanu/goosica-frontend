@@ -1,3 +1,4 @@
+import { cn } from "../utils/devToolkit";
 import { DropDown } from "./DropDown";
 import Marquee from "react-fast-marquee";
 import { useLayoutEffect, useRef, useState } from "react";
@@ -47,10 +48,9 @@ export function Card({
     <div
       ref={containerRef}
       className={
-        "bg-zinc-50 flex flex-col rounded-xl shadow-md/25 shrink-0 " +
-        (cardWidth || "w-[250px]") +
-        " overflow-x-hidden " +
-        (isHovered && "shadow-xl")
+        cn("bg-zinc-50 flex flex-col overflow-x-hidden rounded-xl shadow-md/25 shrink-0",
+        cardWidth || "w-[250px]",
+        isHovered && "shadow-xl")
       }
     >
       {/* ROW 1 - Thumbnail display */}
@@ -76,8 +76,8 @@ export function Card({
 
         <div
           className={
-            "absolute bg-black/50 grid grid-cols-3 h-full items-center justify-items-center w-full z-10 " +
-            (!isHovered && "hidden")
+            cn("absolute bg-black/50 grid grid-cols-3 h-full items-center justify-items-center w-full z-10",
+            !isHovered && "hidden")
           }
         >
           <ArrowLeftToLine className="cursor-pointer" stroke="white" />
