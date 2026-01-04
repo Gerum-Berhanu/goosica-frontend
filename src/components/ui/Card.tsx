@@ -16,15 +16,13 @@ interface CardProps {
   uploader: string;
   cardWidth?: string;
   imagePath: string;
-  imageHeight?: string;
 }
 
 export function Card({
   title,
   uploader,
   cardWidth,
-  imagePath,
-  imageHeight = "150px",
+  imagePath
 }: CardProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [isEllipsisClicked, setEllipsisClicked] = useState(false);
@@ -47,15 +45,15 @@ export function Card({
   return (
     <div
       ref={containerRef}
-      className={
-        cn("bg-zinc-50 flex flex-col overflow-x-hidden rounded-xl shadow-md/25 shrink-0",
+      className={cn(
+        "bg-zinc-50 grid grid-rows-[150px_auto] overflow-x-hidden rounded-xl shadow-md/25 shrink-0",
         cardWidth || "w-[250px]",
-        isHovered && "shadow-xl")
-      }
+        isHovered && "shadow-xl"
+      )}
     >
       {/* ROW 1 - Thumbnail display */}
       <div
-        className="grid grid-rows-1 relative"
+        className={cn("grid grid-rows-1 relative", !cardWidth ? "w-[250px]" : null)}
         onMouseEnter={() => {
           setIsHovered(true);
         }}
@@ -63,6 +61,7 @@ export function Card({
           setIsHovered(false);
         }}
       >
+        {/* DropDown list feature is implemented here */}
         <button
           className="absolute cursor-pointer z-20"
           onClick={() => {
@@ -72,14 +71,14 @@ export function Card({
           <EllipsisVertical stroke="white" />
         </button>
 
-        {/* DropDown list feature is implemented here */}
         {isEllipsisClicked && <DropDown onClick={setEllipsisClicked} />}
 
+        {/* The previous, play/pause, and next buttons */}
         <div
-          className={
-            cn("absolute bg-black/50 grid grid-cols-3 h-full items-center justify-items-center w-full z-10",
-            !isHovered && "hidden")
-          }
+          className={cn(
+            "absolute bg-black/50 grid grid-cols-3 h-full items-center justify-items-center w-full z-10",
+            !isHovered && "hidden"
+          )}
         >
           <ArrowLeftToLine className="cursor-pointer" stroke="white" />
           {onPlay ? (
@@ -102,19 +101,25 @@ export function Card({
           <ArrowRightToLine className="cursor-pointer" stroke="white" />
         </div>
 
-        <div className="bg-black w-full">
-          <img
+        {/* The actual thumbnail container */}
+        <div
+          style={{ backgroundImage: `url(${imagePath})` }}
+          className={cn(
+            "bg-contain bg-center bg-no-repeat",
+            "bg-black"
+          )}
+        >
+          {/* <img
             src={imagePath}
             alt="Music Thumbnail"
-            style={{ height: imageHeight }}
             className={"object-contain place-self-center w-auto"}
-          />
+          /> */}
         </div>
       </div>
 
       {/* ROW 2 - Title and uploader display */}
       {shouldMarquee ? (
-        <div className="flex flex-col flex-nowrap gap-2 items-center justify-center p-2">
+        <div className={cn("flex flex-col flex-nowrap gap-2 items-center justify-center p-2", !cardWidth ? "w-[250px]" : null)}>
           <Marquee gradient={false} speed={50} pauseOnHover={true}>
             <span ref={textRef} className="text-xl px-4 whitespace-nowrap">
               {title}
@@ -123,7 +128,7 @@ export function Card({
           <span className="text-sm">{uploader}</span>
         </div>
       ) : (
-        <div className="flex flex-col flex-nowrap gap-2 items-center justify-center p-2">
+        <div className={cn("flex flex-col flex-nowrap gap-2 items-center justify-center p-2", !cardWidth ? "w-[250px]" : null)}>
           <span ref={textRef} className="text-xl px-4 whitespace-nowrap">
             {title}
           </span>

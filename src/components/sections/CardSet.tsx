@@ -10,10 +10,10 @@ export function CardSet({ title }: CardSetProps) {
         {"id": "A102", "title": "Thriller", "uploader": "Michael Jackson", "imagePath": "./thriller-thumbnail.jpg"},
         {"id": "A103", "title": "Don't Stop Till You Get Enough", "uploader": "Michael Jackson", "imagePath": "./off-the-wall-album-thumbnail.jpg"},
         {"id": "A104", "title": "Lonely Night", "uploader": "The Weeknd", "imagePath": "./starboy-album-thumbnail.jpg"},
-        {"id": "A105", "title": "Starboy", "uploader": "The Weeknd", "imagePath": "./starboy-album-thumbnail.jpg"},
-        {"id": "A106", "title": "Love to Lay", "uploader": "The Weeknd", "imagePath": "./starboy-album-thumbnail.jpg"},
-        {"id": "A107", "title": "Love to Lay", "uploader": "The Weeknd", "imagePath": "./starboy-album-thumbnail.jpg"},
-        {"id": "A108", "title": "Love to Lay", "uploader": "The Weeknd", "imagePath": "./starboy-album-thumbnail.jpg"},
+        // {"id": "A105", "title": "Starboy", "uploader": "The Weeknd", "imagePath": "./starboy-album-thumbnail.jpg"},
+        // {"id": "A106", "title": "Love to Lay", "uploader": "The Weeknd", "imagePath": "./starboy-album-thumbnail.jpg"},
+        // {"id": "A107", "title": "Love to Lay", "uploader": "The Weeknd", "imagePath": "./starboy-album-thumbnail.jpg"},
+        // {"id": "A108", "title": "Love to Lay", "uploader": "The Weeknd", "imagePath": "./starboy-album-thumbnail.jpg"},
     ];
 
   return (
