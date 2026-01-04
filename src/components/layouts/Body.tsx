@@ -15,13 +15,17 @@ export function Body() {
       setIsSearched(true);
     }
 
+    const handleReturn = () => {
+      setIsSearched(false);
+    }
+
     return (
       <div className="bg-slate-200 flex flex-col h-full overflow-y-auto w-full md:w-2/3 lg:w-3/4">
         <NavBar onSearch={handleSearch}/>
         <div className="h-full overflow-y-auto">
           {isSearched ? (
             // SearchResult
-            <SearchResult />
+            <SearchResult onReturn={handleReturn} />
           ) : (
             // CardSet
             <CardSetContainer />

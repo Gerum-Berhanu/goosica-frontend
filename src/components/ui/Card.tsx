@@ -48,7 +48,7 @@ export function Card({
       className={cn(
         "bg-zinc-50 grid grid-rows-[150px_auto] overflow-x-hidden rounded-xl shadow-md/25 shrink-0",
         cardWidth || "w-[250px]",
-        isHovered && "shadow-xl"
+        isHovered && "shadow-lg/50"
       )}
     >
       {/* ROW 1 - Thumbnail display */}
