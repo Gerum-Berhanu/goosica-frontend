@@ -1,5 +1,5 @@
 import { X } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface DropDownProps {
   onClick: (newValue: boolean) => void;
@@ -7,8 +7,8 @@ interface DropDownProps {
 
 export function DropDown({ onClick }: DropDownProps) {
   const dropdownList = [
-    "Add to Favorites",
     "Add to Queue",
+    "Add to Favorites",
     "Add to Playlist",
     "Share",
     "Download",
@@ -56,4 +56,4 @@ export function DropDown({ onClick }: DropDownProps) {
       ))}
     </div>
   );
-}
+};
