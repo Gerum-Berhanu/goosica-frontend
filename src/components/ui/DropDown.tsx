@@ -1,5 +1,6 @@
 import { X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
+import { CardSetContext, useCardSet } from "../sections/CardSet";
 
 interface DropDownProps {
   onClick: (newValue: boolean) => void;
@@ -30,6 +31,28 @@ export function DropDown({ onClick }: DropDownProps) {
     };
   }, [onClick]);
 
+  const [ contextData, setContextData ] = useCardSet();
+
+  const handleDropdownClick = (text: string) => {
+    switch (text) {
+      case "Add to Queue":
+        setContextData(prev => {
+          const newData = [...prev];
+          newData[1].songs.push({
+            id: "A207",
+            title: "Feel It Coming",
+            uploader: "The Weeknd",
+            imagePath: "./starboy-album-thumbnail.jpg",
+          });
+          return newData;
+        });
+        break;
+    
+      default:
+        break;
+    }
+  }
+
   return (
     <div
       ref={dropdownRef}
@@ -50,6 +73,7 @@ export function DropDown({ onClick }: DropDownProps) {
         <button
           key={`${index}-${item}`}
           className="hover:bg-zinc-200 border-y cursor-pointer p-1 rounded-xl text-xs"
+          onClick={()=>handleDropdownClick(item)}
         >
           {item}
         </button>

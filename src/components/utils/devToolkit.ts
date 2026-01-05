@@ -13,7 +13,7 @@ export const generateId = () => {
   );
 };
 
-export const setData = [
+export const initSetData = [
   {
     type: "pick",
     heading: "Today's Pick",
