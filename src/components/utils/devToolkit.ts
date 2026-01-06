@@ -20,42 +20,42 @@ export const initSetData: CardType[] = [
     title: "Beat It",
     uploader: "Michael Jackson",
     imagePath: "./beat-it-thumbnail.jpg",
-    tags: ["p", "q", "f"]
+    tags: ["t", "q", "f"]
   },
   {
     id: "A102",
     title: "Thriller",
     uploader: "Michael Jackson",
     imagePath: "./thriller-thumbnail.jpg",
-    tags: ["p", "q", "f", "d"]
+    tags: ["t", "q", "f", "d"]
   },
   {
     id: "A103",
     title: "Don't Stop Till You Get Enough",
     uploader: "Michael Jackson",
     imagePath: "./off-the-wall-album-thumbnail.jpg",
-    tags: ["p"]
+    tags: ["t"]
   },
   {
     id: "A104",
     title: "Lonely Night",
     uploader: "The Weeknd",
     imagePath: "./starboy-album-thumbnail.jpg",
-    tags: ["p", "q", "f"]
+    tags: ["t", "q", "f"]
   },
   {
     id: "A105",
     title: "Starboy",
     uploader: "The Weeknd",
     imagePath: "./starboy-album-thumbnail.jpg",
-    tags: ["p"]
+    tags: ["t"]
   },
   {
     id: "A106",
     title: "Love to Lay",
     uploader: "The Weeknd",
     imagePath: "./starboy-album-thumbnail.jpg",
-    tags: ["p", "f"]
+    tags: ["t", "f"]
   },
 ]
 
