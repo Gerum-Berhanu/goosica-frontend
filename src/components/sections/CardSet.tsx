@@ -2,16 +2,24 @@ import { createContext, type Dispatch, type SetStateAction, useState, useContext
 import { Card } from "../ui/Card";
 import { initSetData } from "../utils/devToolkit";
 
-export interface CardType {
-  id: string,
-  title: string,
-  uploader: string,
-  imagePath: string,
-  cardWidth?: string,
-  tags: string[]
+type CardTag = "p" | "q" | "f" | "d";
+
+const TAG_LABELS: Record<CardTag, string> = {
+  p: "Today's Pick",
+  q: "Queue",
+  f: "Favorites",
+  d: "Downloads",
 };
 
-// FIXME: This is unclear, continue from here, it has something to do with CardType
+export interface CardType {
+  id: string;
+  title: string;
+  uploader: string;
+  imagePath: string;
+  cardWidth?: string;
+  tags: CardTag[];
+};
+
 export const CardSetContext = createContext<[CardType[], Dispatch<SetStateAction<CardType[]>>] | null>(null);
 
 export const useCardSet = () => {
@@ -25,7 +33,7 @@ export const useCardSet = () => {
 export function CardSetContainer() {
   const [ contextData, setContextData ] = useState([...initSetData]);
 
-  const headings = ["p", "q", "f", "d"];
+  const headings: CardTag[] = ["p", "q", "f", "d"];
   
   return (
     <CardSetContext value={[contextData, setContextData]}>
@@ -37,7 +45,7 @@ export function CardSetContainer() {
             <div className="flex flex-col gap-4">
               {/* ROW 1 - Heading */}
               <div className="w-full">
-                <span className="text-3xl text-shadow-md/20">{tag}</span>
+                <span className="text-3xl text-shadow-md/20">{TAG_LABELS[tag]}</span>
               </div>
 
               {/* ROW 2- Song list */}

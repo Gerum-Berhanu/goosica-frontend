@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import type { CardType } from "../sections/CardSet";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -13,7 +14,7 @@ export const generateId = () => {
   );
 };
 
-export const initSetData = [
+export const initSetData: CardType[] = [
   {
     id: "A101",
     title: "Beat It",
