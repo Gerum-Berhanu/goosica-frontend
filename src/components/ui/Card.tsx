@@ -11,7 +11,12 @@ import {
   Play
 } from "lucide-react";
 
-export function Card(data: CardType) {
+interface CardProps {
+  data: CardType;
+  cardWidth?: string;
+}
+
+export function Card({data, cardWidth}: CardProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [isEllipsisClicked, setEllipsisClicked] = useState(false);
 
@@ -35,13 +40,13 @@ export function Card(data: CardType) {
       ref={containerRef}
       className={cn(
         "bg-zinc-50 grid grid-rows-[150px_auto] overflow-x-hidden rounded-xl shadow-md/25 shrink-0",
-        data.cardWidth || "w-[250px]",
+        cardWidth || "w-[250px]",
         isHovered && "shadow-lg/50"
       )}
     >
       {/* ROW 1 - Thumbnail display */}
       <div
-        className={cn("grid grid-rows-1 relative", !data.cardWidth ? "w-[250px]" : null)}
+        className={cn("grid grid-rows-1 relative", !cardWidth ? "w-[250px]" : null)}
         onMouseEnter={() => {
           setIsHovered(true);
         }}
@@ -107,7 +112,7 @@ export function Card(data: CardType) {
 
       {/* ROW 2 - Title and uploader display */}
       {shouldMarquee ? (
-        <div className={cn("flex flex-col flex-nowrap gap-2 items-center justify-center p-2", !data.cardWidth ? "w-[250px]" : null)}>
+        <div className={cn("flex flex-col flex-nowrap gap-2 items-center justify-center p-2", !cardWidth ? "w-[250px]" : null)}>
           <Marquee gradient={false} speed={50} pauseOnHover={true}>
             <span ref={textRef} className="text-xl px-4 whitespace-nowrap">
               {data.title}
@@ -116,7 +121,7 @@ export function Card(data: CardType) {
           <span className="text-sm">{data.uploader}</span>
         </div>
       ) : (
-        <div className={cn("flex flex-col flex-nowrap gap-2 items-center justify-center p-2", !data.cardWidth ? "w-[250px]" : null)}>
+        <div className={cn("flex flex-col flex-nowrap gap-2 items-center justify-center p-2", !cardWidth ? "w-[250px]" : null)}>
           <span ref={textRef} className="text-xl px-4 whitespace-nowrap">
             {data.title}
           </span>

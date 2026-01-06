@@ -72,11 +72,7 @@ export function CardSetContainer() {
                 {groupedByTag[tag].map((item) => (
                   <Card
                     key={`${item.id}-${tag}`}
-                    id={item.id}
-                    title={item.title}
-                    uploader={item.uploader}
-                    imagePath={item.imagePath}
-                    tags={item.tags}
+                    data={item}
                   />
                 ))}
               </div>
