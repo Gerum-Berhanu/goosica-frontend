@@ -15,6 +15,51 @@ export const generateId = () => {
 
 export const initSetData = [
   {
+    id: "A101",
+    title: "Beat It",
+    uploader: "Michael Jackson",
+    imagePath: "./beat-it-thumbnail.jpg",
+    tags: ["p", "q", "f"]
+  },
+  {
+    id: "A102",
+    title: "Thriller",
+    uploader: "Michael Jackson",
+    imagePath: "./thriller-thumbnail.jpg",
+    tags: ["p", "q", "f", "d"]
+  },
+  {
+    id: "A103",
+    title: "Don't Stop Till You Get Enough",
+    uploader: "Michael Jackson",
+    imagePath: "./off-the-wall-album-thumbnail.jpg",
+    tags: ["p"]
+  },
+  {
+    id: "A104",
+    title: "Lonely Night",
+    uploader: "The Weeknd",
+    imagePath: "./starboy-album-thumbnail.jpg",
+    tags: ["p", "q", "f"]
+  },
+  {
+    id: "A105",
+    title: "Starboy",
+    uploader: "The Weeknd",
+    imagePath: "./starboy-album-thumbnail.jpg",
+    tags: ["p"]
+  },
+  {
+    id: "A106",
+    title: "Love to Lay",
+    uploader: "The Weeknd",
+    imagePath: "./starboy-album-thumbnail.jpg",
+    tags: ["p", "f"]
+  },
+]
+
+export const dep_initSetData = [
+  {
     type: "pick",
     heading: "Today's Pick",
     songs: [
