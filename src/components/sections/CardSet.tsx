@@ -2,7 +2,7 @@ import { createContext, type Dispatch, type SetStateAction, useState, useContext
 import { Card } from "../ui/Card";
 import { initSetData } from "../utils/devToolkit";
 
-type CardTag = "t" | "q" | "f" | "d";
+export type CardTag = "t" | "q" | "f" | "d";
 
 const TAG_LABELS: Record<CardTag, string> = {
   t: "Today's Pick",
