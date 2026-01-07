@@ -42,7 +42,7 @@ export function CardSetContainer() {
         {/* Card set */}
         {headings.map(tag => { 
           return (
-            <div className="flex flex-col gap-4">
+            <div key={tag} className="flex flex-col gap-4">
               {/* ROW 1 - Heading */}
               <div className="w-full">
                 <span className="text-3xl text-shadow-md/20">

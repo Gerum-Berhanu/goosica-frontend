@@ -18,7 +18,7 @@ export function SearchResult({ onReturn }: SearchResultProps) {
 
         {/* ROW 2 - Cards */}
         {/* <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))]"> */}
-        <div className="flex flex-wrap gap-4 justify-evenly">
+        {/* <div className="flex flex-wrap gap-4 justify-evenly">
           {[...Array(7)].map((_, index) => (
             <Card
               key={index}
@@ -27,7 +27,7 @@ export function SearchResult({ onReturn }: SearchResultProps) {
               imagePath="./zenith-cover.jpg"
             />
           ))}
-        </div>
+        </div> */}
       </div>
     );
 }

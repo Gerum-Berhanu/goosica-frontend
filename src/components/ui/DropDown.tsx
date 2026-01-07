@@ -1,6 +1,7 @@
 import { X } from "lucide-react";
 import { useContext, useEffect, useRef, useState } from "react";
 import { CardSetContext, useCardSet, type CardTag, type CardType } from "../sections/CardSet";
+import type { GroupCollectionType } from "../utils/devToolkit";
 
 type ActionOption = "add" | "remove" | "none";
 
@@ -72,30 +73,32 @@ export function DropDown({ data, tags, onClick }: DropDownProps) {
       return;
     }
 
-    if (option.action === "add") {
-      // add song to the queue
-      setContextData(prev => {
-        // let copyPrev = [...prev];
-        const clone = prev;
-        const taggedList = clone[option.key];
-        let modifiedCard: CardType = song;
+    setContextData(prev => {
+      const clone: GroupCollectionType = { ...prev };
+      let taggedList = clone[option.key];
 
-        if (option.action === "add") {
-          modifiedCard.tags.push(option.key);
-          taggedList.push(modifiedCard);
-        } else if (option.action === "remove") {
-          modifiedCard.tags = modifiedCard.tags.filter(
-            (tag) => tag !== option.key
-          );
-          taggedList.push(modifiedCard);
+      const modifiedCard: CardType = { 
+        ...song,
+        tags: option.action === "add" 
+          ? [ ...song.tags, option.key ] 
+          : song.tags.filter(tag => tag !== option.key)
+      };
+
+      if (option.action === "add") {
+        taggedList.push(modifiedCard);
+      } 
+      
+      else {
+        const index = taggedList.findIndex(c => c.id === song.id);
+        if (index !== -1) {
+          taggedList.splice(index, 1);
         }
-        clone[option.key] = taggedList;
+      }
 
-        return clone;
-      })
-    } else if (option.action === "remove") {
-      // remove song from the queue
-    }
+      clone[option.key] = taggedList;
+
+      return clone;
+    });
   }
 
   const dropdownList = resolveTags(tags);
