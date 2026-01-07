@@ -61,7 +61,7 @@ export const initCollection: CardType[] = [
 
 export type GroupCollectionType = Record<CardTag, CardType[]>;
 
-function groupByTag(rawCollection: CardType[]): GroupCollectionType {
+export function groupByTag(rawCollection: CardType[]): GroupCollectionType {
   const grouped: GroupCollectionType = {
     t: [],
     q: [],
@@ -78,4 +78,3 @@ function groupByTag(rawCollection: CardType[]): GroupCollectionType {
   return grouped;
 }
 
-export const groupedCollection: GroupCollectionType = groupByTag(initCollection);

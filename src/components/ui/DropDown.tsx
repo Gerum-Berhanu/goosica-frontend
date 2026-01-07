@@ -1,7 +1,6 @@
 import { X } from "lucide-react";
-import { useContext, useEffect, useRef, useState } from "react";
-import { CardSetContext, useCardSet, type CardTag, type CardType } from "../sections/CardSet";
-import type { GroupCollectionType } from "../utils/devToolkit";
+import { useEffect, useRef } from "react";
+import { useCardSet, type CardTag, type CardType } from "../sections/CardSet";
 
 type ActionOption = "add" | "remove" | "none";
 
@@ -36,7 +35,6 @@ const resolveTags = (tags: CardTag[]): DropDownOption[] =>
     }
 
     return { ...newOption, action: action };
-    // now the expected return is: { key: option.key, addLabel: option.addLabel, removeLabel: option.removeLabel, action: action };
   });
 
 interface DropDownProps {
@@ -65,37 +63,20 @@ export function DropDown({ data, tags, onClick }: DropDownProps) {
   const [ contextData, setContextData ] = useCardSet();
 
   const handleDropdownClick = (song: CardType, option: DropDownOption) => {
-    // TODO: Start from this next time you're here
-    // example input: { key: "q", addLabel: "Add to Queue", removeLabel: "Remove from Queue", action: "remove" };
-    // action: "remove" means current label is removeLabel
-
     if (option.kind !== "mutable") {
       return;
     }
 
     setContextData(prev => {
-      const clone: GroupCollectionType = { ...prev };
-      let taggedList = clone[option.key];
+      const clone: CardType[] = [ ...prev ];
 
-      const modifiedCard: CardType = { 
-        ...song,
-        tags: option.action === "add" 
-          ? [ ...song.tags, option.key ] 
-          : song.tags.filter(tag => tag !== option.key)
-      };
+      const index = clone.findIndex(c => c.id === song.id);
 
-      if (option.action === "add") {
-        taggedList.push(modifiedCard);
-      } 
-      
-      else {
-        const index = taggedList.findIndex(c => c.id === song.id);
-        if (index !== -1) {
-          taggedList.splice(index, 1);
-        }
-      }
+      if (option.action === "add")
+        clone[index].tags.push(option.key);
 
-      clone[option.key] = taggedList;
+      else
+        clone[index].tags = clone[index].tags.filter(tag => tag !== option.key);
 
       return clone;
     });

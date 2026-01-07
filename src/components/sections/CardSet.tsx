@@ -1,6 +1,6 @@
 import { createContext, type Dispatch, type SetStateAction, useState, useContext } from "react";
 import { Card } from "../ui/Card";
-import { groupedCollection, type GroupCollectionType } from "../utils/devToolkit";
+import { groupByTag, initCollection, type GroupCollectionType } from "../utils/devToolkit";
 
 export type CardTag = "t" | "q" | "f" | "d";
 
@@ -20,7 +20,7 @@ export interface CardType {
   tags: CardTag[];
 };
 
-export const CardSetContext = createContext<[GroupCollectionType, Dispatch<SetStateAction<GroupCollectionType>>] | null>(null);
+export const CardSetContext = createContext<[CardType[], Dispatch<SetStateAction<CardType[]>>] | null>(null);
 
 export const useCardSet = () => {
   const context = useContext(CardSetContext);
@@ -31,7 +31,9 @@ export const useCardSet = () => {
 };
 
 export function CardSetContainer() {
-  const [ contextData, setContextData ] = useState<GroupCollectionType>(groupedCollection);
+  const [ contextData, setContextData ] = useState<CardType[]>(initCollection);
+
+  const groupedCollection: GroupCollectionType = groupByTag(initCollection);
   
   const headings: CardTag[] = ["t", "q", "f", "d"];
 
