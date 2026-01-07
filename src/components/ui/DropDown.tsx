@@ -2,34 +2,49 @@ import { X } from "lucide-react";
 import { useContext, useEffect, useRef, useState } from "react";
 import { CardSetContext, useCardSet, type CardTag, type CardType } from "../sections/CardSet";
 
-type DropDownOption = 
-  { key: CardTag; addLabel: string; removeLabel: string } |
-  { key: "n"; label: string }; // no toggle
+type ActionOption = "add" | "remove" | "none";
 
+type MutableDropDownOption = { kind: "mutable"; key: CardTag; currentLabel?: string; addLabel: string; removeLabel: string; action?: ActionOption };
+type ImmutableDropDownOption = { kind: "immutable"; key: "n"; currentLabel: string; action?: ActionOption }; // no toggle
+
+type DropDownOption = MutableDropDownOption | ImmutableDropDownOption;
 
 const dropDownOptions: DropDownOption[] = [
-  { key: "q", addLabel: "Add to Queue", removeLabel: "Remove from Queue" },
-  { key: "f", addLabel: "Add to Favorites", removeLabel: "Remove from Favorites" },
-  { key: "n", label: "Add to Playlist" },
-  { key: "n", label: "Share" },
-  { key: "d", addLabel: "Download", removeLabel: "Delete" },
+  { kind: "mutable", key: "q", addLabel: "Add to Queue", removeLabel: "Remove from Queue"  },
+  { kind: "mutable", key: "f", addLabel: "Add to Favorites", removeLabel: "Remove from Favorites" },
+  { kind: "immutable", key: "n", currentLabel: "Add to Playlist", action: "none" },
+  { kind: "immutable", key: "n", currentLabel: "Share", action: "none" },
+  { kind: "mutable", key: "d", addLabel: "Download", removeLabel: "Delete" },
 ]
 
-const resolveTags = (tags: CardTag[]) =>
+const resolveTags = (tags: CardTag[]): DropDownOption[] =>
   dropDownOptions.map(option => {
     if (option.key === "n") {
-      return option.label;
+      return { ...option }
     }
     const hasTag = tags.includes(option.key);
-    return hasTag ? option.removeLabel : option.addLabel;
+    const newOption = {...option}
+    let action: ActionOption;
+
+    if (hasTag) {
+      newOption.currentLabel = newOption.removeLabel;
+      action = "remove";
+    } else {
+      newOption.currentLabel = newOption.addLabel;
+      action = "add";
+    }
+
+    return { ...newOption, action: action };
+    // now the expected return is: { key: option.key, addLabel: option.addLabel, removeLabel: option.removeLabel, action: action };
   });
 
 interface DropDownProps {
+  data: CardType;
   tags: CardTag[];
   onClick: (newValue: boolean) => void;
 }
 
-export function DropDown({ tags, onClick }: DropDownProps) {
+export function DropDown({ data, tags, onClick }: DropDownProps) {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -48,8 +63,39 @@ export function DropDown({ tags, onClick }: DropDownProps) {
 
   const [ contextData, setContextData ] = useCardSet();
 
-  const handleDropdownClick = (tag: string) => {
+  const handleDropdownClick = (song: CardType, option: DropDownOption) => {
+    // TODO: Start from this next time you're here
+    // example input: { key: "q", addLabel: "Add to Queue", removeLabel: "Remove from Queue", action: "remove" };
+    // action: "remove" means current label is removeLabel
 
+    if (option.kind !== "mutable") {
+      return;
+    }
+
+    if (option.action === "add") {
+      // add song to the queue
+      setContextData(prev => {
+        // let copyPrev = [...prev];
+        const clone = prev;
+        const taggedList = clone[option.key];
+        let modifiedCard: CardType = song;
+
+        if (option.action === "add") {
+          modifiedCard.tags.push(option.key);
+          taggedList.push(modifiedCard);
+        } else if (option.action === "remove") {
+          modifiedCard.tags = modifiedCard.tags.filter(
+            (tag) => tag !== option.key
+          );
+          taggedList.push(modifiedCard);
+        }
+        clone[option.key] = taggedList;
+
+        return clone;
+      })
+    } else if (option.action === "remove") {
+      // remove song from the queue
+    }
   }
 
   const dropdownList = resolveTags(tags);
@@ -74,9 +120,9 @@ export function DropDown({ tags, onClick }: DropDownProps) {
         <button
           key={`${index}`}
           className="hover:bg-zinc-200 border-y cursor-pointer p-1 rounded-xl text-xs"
-          onClick={()=>handleDropdownClick(item[0])}
+          onClick={()=>handleDropdownClick(data, item)}
         >
-          {item}
+          {item.currentLabel}
         </button>
       ))}
     </div>

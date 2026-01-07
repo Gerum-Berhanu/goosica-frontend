@@ -64,7 +64,7 @@ export function Card({data, cardWidth}: CardProps) {
           <EllipsisVertical stroke="white" />
         </button>
 
-        {isEllipsisClicked && <DropDown tags={data.tags} onClick={setEllipsisClicked} />}
+        {isEllipsisClicked && <DropDown data={data} tags={data.tags} onClick={setEllipsisClicked} />}
 
         {/* The previous, play/pause, and next buttons */}
         <div

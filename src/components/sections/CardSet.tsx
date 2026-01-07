@@ -1,6 +1,6 @@
-import { createContext, type Dispatch, type SetStateAction, useState, useContext, useMemo } from "react";
+import { createContext, type Dispatch, type SetStateAction, useState, useContext } from "react";
 import { Card } from "../ui/Card";
-import { initSetData } from "../utils/devToolkit";
+import { groupedCollection, type GroupCollectionType } from "../utils/devToolkit";
 
 export type CardTag = "t" | "q" | "f" | "d";
 
@@ -20,7 +20,7 @@ export interface CardType {
   tags: CardTag[];
 };
 
-export const CardSetContext = createContext<[CardType[], Dispatch<SetStateAction<CardType[]>>] | null>(null);
+export const CardSetContext = createContext<[GroupCollectionType, Dispatch<SetStateAction<GroupCollectionType>>] | null>(null);
 
 export const useCardSet = () => {
   const context = useContext(CardSetContext);
@@ -31,24 +31,7 @@ export const useCardSet = () => {
 };
 
 export function CardSetContainer() {
-  const [ contextData, setContextData ] = useState<CardType[]>(initSetData);
-  
-  const groupedByTag = useMemo(()=>{
-    const grouped: Record<CardTag, CardType[]> = {
-      t: [],
-      q: [],
-      f: [],
-      d: [],
-    };
-    
-    for (const card of contextData) {
-      for (const tag of card.tags) {
-        grouped[tag].push(card);
-      }
-    }
-
-    return grouped;
-  }, [contextData]);
+  const [ contextData, setContextData ] = useState<GroupCollectionType>(groupedCollection);
   
   const headings: CardTag[] = ["t", "q", "f", "d"];
 
@@ -69,7 +52,7 @@ export function CardSetContainer() {
 
               {/* ROW 2- Song list */}
               <div className="flex gap-4 overflow-x-auto pb-2">
-                {groupedByTag[tag].map((item) => (
+                {groupedCollection[tag].map((item) => (
                   <Card
                     key={`${item.id}-${tag}`}
                     data={item}
