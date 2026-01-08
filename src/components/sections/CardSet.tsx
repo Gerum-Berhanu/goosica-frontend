@@ -1,6 +1,5 @@
-import { createContext, type Dispatch, type SetStateAction, useState, useContext } from "react";
 import { Card } from "../ui/Card";
-import { findSongById, groupByTag, type GroupCollectionType, cardsById, type OrderById } from "../utils/devToolkit";
+import { findSongById, type GroupCollectionType } from "../utils/devToolkit";
 
 export type CardTag = "t" | "q" | "f" | "d";
 
@@ -11,6 +10,8 @@ const TAG_LABELS: Record<CardTag, string> = {
   d: "Downloads",
 };
 
+export type CardStatus = "onPlay" | "onPause" | "onNone";
+
 export interface CardType {
   id: string;
   title: string;
@@ -18,58 +19,47 @@ export interface CardType {
   imagePath: string;
   cardWidth?: string;
   tags: CardTag[];
+  status?: CardStatus;
 };
 
-export const CardSetContext = createContext<[OrderById, Dispatch<SetStateAction<OrderById>>] | null>(null);
+interface CardSetContainerProps {
+  group: GroupCollectionType;
+}
 
-export const useCardSet = () => {
-  const context = useContext(CardSetContext);
-  if (!context) {
-    throw new Error("useCardSet must be used within a CardSetProvider");
-  }
-  return context;
-};
-
-export function CardSetContainer() {
-  const [ contextData, setContextData ] = useState<OrderById>(cardsById);
-
-  const groupedCollection: GroupCollectionType = groupByTag(contextData);
-
+export function CardSetContainer({ group }: CardSetContainerProps) {
   const headings: CardTag[] = ["t", "q", "f", "d"];
 
   return (
-    <CardSetContext value={[contextData, setContextData]}>
-      <div className="flex flex-col gap-8 px-2 md:px-8 py-8">
+    <div className="flex flex-col gap-8 px-2 md:px-8 py-8">
 
-        {/* Card set */}
-        {headings.map(tag => { 
-          return (
-            <div key={tag} className="flex flex-col gap-4">
-              {/* ROW 1 - Heading */}
-              <div className="w-full">
-                <span className="text-3xl text-shadow-md/20">
-                  {TAG_LABELS[tag]}
-                </span>
-              </div>
-
-              {/* ROW 2- Song list */}
-              <div className="flex gap-4 overflow-x-auto pb-2">
-                {
-                  groupedCollection[tag]
-                    .map(id => findSongById(id))
-                    .filter(song => song !== undefined)
-                    .map(song =>
-                      <Card
-                        key={`${song.id}-${tag}`}
-                        data={song}
-                      />)
-                }
-              </div>
+      {/* Card set */}
+      {headings.map(tag => { 
+        return (
+          <div key={tag} className="flex flex-col gap-4">
+            {/* ROW 1 - Heading */}
+            <div className="w-full">
+              <span className="text-3xl text-shadow-md/20">
+                {TAG_LABELS[tag]}
+              </span>
             </div>
-          );
-        })}
-        
-      </div>
-    </CardSetContext>
+
+            {/* ROW 2- Song list */}
+            <div className="flex gap-4 overflow-x-auto pb-2">
+              {
+                group[tag]
+                  .map(id => findSongById(id))
+                  .filter(song => song !== undefined)
+                  .map(song =>
+                    <Card
+                      key={`${song.id}-${tag}`}
+                      data={song}
+                    />)
+              }
+            </div>
+          </div>
+        );
+      })}
+      
+    </div>
   );
 }

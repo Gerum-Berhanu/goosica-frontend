@@ -2,7 +2,8 @@ import { cn } from "../utils/devToolkit";
 import { DropDown } from "./DropDown";
 import Marquee from "react-fast-marquee";
 import { useLayoutEffect, useRef, useState } from "react";
-import type { CardType } from "../sections/CardSet";
+import { type CardStatus, type CardType } from "../sections/CardSet";
+import { useCardSet } from "../../App";
 import {
   ArrowLeftToLine,
   ArrowRightToLine,
@@ -33,7 +34,15 @@ export function Card({data, cardWidth}: CardProps) {
     setShouldMarquee(text.scrollWidth > container.clientWidth);
   }, [data.title]);
 
-  const [onPlay, setOnPlay] = useState(false);
+  const [ contextData, setContextData ] = useCardSet();
+
+  const handleStatus = (song: CardType, status: CardStatus) => {
+    setContextData(prev => {
+      const clone = { ...prev };
+      clone[song.id].status = status;
+      return clone;
+    })
+  }
 
   return (
     <div
@@ -74,11 +83,11 @@ export function Card({data, cardWidth}: CardProps) {
           )}
         >
           <ArrowLeftToLine className="cursor-pointer" stroke="white" />
-          {onPlay ? (
+          {data.status === "onPlay" ? (
             <Pause
               className="cursor-pointer"
               onClick={() => {
-                setOnPlay(false);
+                handleStatus(data, "onPause");
               }}
               stroke="white"
             />
@@ -86,7 +95,7 @@ export function Card({data, cardWidth}: CardProps) {
             <Play
               className="cursor-pointer"
               onClick={() => {
-                setOnPlay(true);
+                handleStatus(data, "onPlay");
               }}
               stroke="white"
             />

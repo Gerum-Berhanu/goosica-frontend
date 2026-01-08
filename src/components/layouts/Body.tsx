@@ -1,9 +1,14 @@
 import { useState } from "react";
-import {CardSetContainer} from "../sections/CardSet";
-import {NavBar} from "../sections/NavBar";
+import { CardSetContainer } from "../sections/CardSet";
+import { NavBar } from "../sections/NavBar";
 import { SearchResult } from "../sections/SearchResult";
+import type { GroupCollectionType } from "../utils/devToolkit";
 
-export function Body() {
+interface BodyProps {
+  group: GroupCollectionType;
+}
+
+export function Body({ group }: BodyProps) {
     const [ isSearched, setIsSearched ] = useState(false);
 
     const handleSearch = (query: string | undefined) => {
@@ -28,7 +33,7 @@ export function Body() {
             <SearchResult onReturn={handleReturn} />
           ) : (
             // CardSet
-            <CardSetContainer />
+            <CardSetContainer group={group} />
           )}
         </div>
       </div>

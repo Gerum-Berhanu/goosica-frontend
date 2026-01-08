@@ -1,6 +1,7 @@
 import { X } from "lucide-react";
 import { useEffect, useRef } from "react";
-import { useCardSet, type CardTag, type CardType } from "../sections/CardSet";
+import { type CardTag, type CardType } from "../sections/CardSet";
+import { useCardSet } from "../../App";
 import type { OrderById } from "../utils/devToolkit";
 
 type ActionOption = "add" | "remove" | "none";
