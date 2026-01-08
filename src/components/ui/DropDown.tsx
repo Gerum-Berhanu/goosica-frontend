@@ -1,6 +1,7 @@
 import { X } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { useCardSet, type CardTag, type CardType } from "../sections/CardSet";
+import type { OrderById } from "../utils/devToolkit";
 
 type ActionOption = "add" | "remove" | "none";
 
@@ -68,15 +69,15 @@ export function DropDown({ data, tags, onClick }: DropDownProps) {
     }
 
     setContextData(prev => {
-      const clone: CardType[] = [ ...prev ];
-
-      const index = clone.findIndex(c => c.id === song.id);
+      const clone: OrderById = { ...prev };
+      const currentCard = clone[song.id];
 
       if (option.action === "add")
-        clone[index].tags.push(option.key);
-
+        currentCard.tags.push(option.key);
       else
-        clone[index].tags = clone[index].tags.filter(tag => tag !== option.key);
+        currentCard.tags = currentCard.tags.filter(tag => tag !== option.key);
+
+      clone[song.id] = currentCard;
 
       return clone;
     });

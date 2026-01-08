@@ -102,11 +102,6 @@ export function Card({data, cardWidth}: CardProps) {
             "bg-black"
           )}
         >
-          {/* <img
-            src={data.imagePath}
-            alt="Music Thumbnail"
-            className={"object-contain place-self-center w-auto"}
-          /> */}
         </div>
       </div>
 

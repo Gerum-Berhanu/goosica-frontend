@@ -14,7 +14,7 @@ export const generateId = () => {
   );
 };
 
-export const initCollection: CardType[] = [
+const rawCollection: CardType[] = [
   {
     id: "A101",
     title: "Beat It",
@@ -59,9 +59,22 @@ export const initCollection: CardType[] = [
   },
 ];
 
-export type GroupCollectionType = Record<CardTag, CardType[]>;
+export type OrderById = Record<string, CardType>;
 
-export function groupByTag(rawCollection: CardType[]): GroupCollectionType {
+export function orderById(rawCollection: CardType[]): OrderById {
+  return rawCollection.reduce<OrderById>(
+    (acc, card) => {
+      acc[card.id] = card;
+      return acc;
+    }, {}
+  );
+}
+
+export const cardsById = orderById(rawCollection);
+
+export type GroupCollectionType = Record<CardTag, string[]>;
+
+export function groupByTag(cardsById: OrderById): GroupCollectionType {
   const grouped: GroupCollectionType = {
     t: [],
     q: [],
@@ -69,12 +82,15 @@ export function groupByTag(rawCollection: CardType[]): GroupCollectionType {
     d: [],
   };
 
-  for (const card of rawCollection) {
-    for (const tag of card.tags) {
-      grouped[tag].push(card);
+  for (const id in cardsById) {
+    for (const tag of cardsById[id].tags) {
+      grouped[tag].push(id);
     }
   }
 
   return grouped;
 }
 
+export function findSongById(id: string): CardType | undefined {
+  return cardsById[id];
+}

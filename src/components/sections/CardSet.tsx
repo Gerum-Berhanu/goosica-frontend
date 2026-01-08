@@ -1,6 +1,6 @@
 import { createContext, type Dispatch, type SetStateAction, useState, useContext } from "react";
 import { Card } from "../ui/Card";
-import { groupByTag, initCollection, type GroupCollectionType } from "../utils/devToolkit";
+import { findSongById, groupByTag, type GroupCollectionType, cardsById, type OrderById } from "../utils/devToolkit";
 
 export type CardTag = "t" | "q" | "f" | "d";
 
@@ -20,7 +20,7 @@ export interface CardType {
   tags: CardTag[];
 };
 
-export const CardSetContext = createContext<[CardType[], Dispatch<SetStateAction<CardType[]>>] | null>(null);
+export const CardSetContext = createContext<[OrderById, Dispatch<SetStateAction<OrderById>>] | null>(null);
 
 export const useCardSet = () => {
   const context = useContext(CardSetContext);
@@ -31,10 +31,10 @@ export const useCardSet = () => {
 };
 
 export function CardSetContainer() {
-  const [ contextData, setContextData ] = useState<CardType[]>(initCollection);
+  const [ contextData, setContextData ] = useState<OrderById>(cardsById);
 
-  const groupedCollection: GroupCollectionType = groupByTag(initCollection);
-  
+  const groupedCollection: GroupCollectionType = groupByTag(contextData);
+
   const headings: CardTag[] = ["t", "q", "f", "d"];
 
   return (
@@ -54,12 +54,16 @@ export function CardSetContainer() {
 
               {/* ROW 2- Song list */}
               <div className="flex gap-4 overflow-x-auto pb-2">
-                {groupedCollection[tag].map((item) => (
-                  <Card
-                    key={`${item.id}-${tag}`}
-                    data={item}
-                  />
-                ))}
+                {
+                  groupedCollection[tag]
+                    .map(id => findSongById(id))
+                    .filter(song => song !== undefined)
+                    .map(song =>
+                      <Card
+                        key={`${song.id}-${tag}`}
+                        data={song}
+                      />)
+                }
               </div>
             </div>
           );
