@@ -34,15 +34,26 @@ export function Card({data, cardWidth}: CardProps) {
     setShouldMarquee(text.scrollWidth > container.clientWidth);
   }, [data.title]);
 
-  const [ contextData, setContextData ] = useCardSet();
+  const [, setContextData ] = useCardSet();
 
   const handleStatus = (song: CardType, status: CardStatus) => {
     setContextData(prev => {
+      // FIXME: LLMs have told me this is not a perfect cloning but a shallow one which may cause a problem
       const clone = { ...prev };
+      const focusedCard = clone.state.focusedCard;
+
+      if (status === "onPlay") {
+        if (focusedCard.isFocused && focusedCard.id !== song.id) {
+          clone.order[focusedCard.id].status = "onNone";
+        }
+        focusedCard.isFocused = true;
+        focusedCard.id = song.id;
+      } 
+
       clone.order[song.id].status = status;
       return clone;
-    })
-  }
+    });
+  };
 
   return (
     <div
@@ -50,12 +61,14 @@ export function Card({data, cardWidth}: CardProps) {
       className={cn(
         "bg-zinc-50 grid grid-rows-[150px_auto] overflow-x-hidden rounded-xl shadow-md/25 shrink-0",
         cardWidth || "w-[250px]",
-        isHovered && "shadow-lg/50"
       )}
     >
       {/* ROW 1 - Thumbnail display */}
       <div
-        className={cn("grid grid-rows-1 relative", !cardWidth ? "w-[250px]" : null)}
+        className={cn(
+          "grid grid-rows-1 relative",
+          !cardWidth ? "w-[250px]" : null
+        )}
         onMouseEnter={() => {
           setIsHovered(true);
         }}
@@ -73,7 +86,9 @@ export function Card({data, cardWidth}: CardProps) {
           <EllipsisVertical stroke="white" />
         </button>
 
-        {isEllipsisClicked && <DropDown data={data} tags={data.tags} onClick={setEllipsisClicked} />}
+        {isEllipsisClicked && (
+          <DropDown data={data} tags={data.tags} onClick={setEllipsisClicked} />
+        )}
 
         {/* The previous, play/pause, and next buttons */}
         <div
@@ -91,7 +106,7 @@ export function Card({data, cardWidth}: CardProps) {
               }}
               stroke="white"
             />
-          ) : (
+          ) : ( // onPause or onNone
             <Play
               className="cursor-pointer"
               onClick={() => {
@@ -106,17 +121,18 @@ export function Card({data, cardWidth}: CardProps) {
         {/* The actual thumbnail container */}
         <div
           style={{ backgroundImage: `url(${data.imagePath})` }}
-          className={cn(
-            "bg-contain bg-center bg-no-repeat",
-            "bg-black"
-          )}
-        >
-        </div>
+          className={cn("bg-contain bg-center bg-no-repeat", "bg-black")}
+        ></div>
       </div>
 
       {/* ROW 2 - Title and uploader display */}
       {shouldMarquee ? (
-        <div className={cn("flex flex-col flex-nowrap gap-2 items-center justify-center p-2", !cardWidth ? "w-[250px]" : null)}>
+        <div
+          className={cn(
+            "flex flex-col flex-nowrap gap-2 items-center justify-center p-2",
+            !cardWidth ? "w-[250px]" : null
+          )}
+        >
           <Marquee gradient={false} speed={50} pauseOnHover={true}>
             <span ref={textRef} className="text-xl px-4 whitespace-nowrap">
               {data.title}
@@ -125,7 +141,12 @@ export function Card({data, cardWidth}: CardProps) {
           <span className="text-sm">{data.uploader}</span>
         </div>
       ) : (
-        <div className={cn("flex flex-col flex-nowrap gap-2 items-center justify-center p-2", !cardWidth ? "w-[250px]" : null)}>
+        <div
+          className={cn(
+            "flex flex-col flex-nowrap gap-2 items-center justify-center p-2",
+            !cardWidth ? "w-[250px]" : null
+          )}
+        >
           <span ref={textRef} className="text-xl px-4 whitespace-nowrap">
             {data.title}
           </span>

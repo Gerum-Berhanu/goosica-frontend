@@ -2,7 +2,6 @@ import { X } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { type CardTag, type CardType } from "../sections/CardSet";
 import { useCardSet } from "../../App";
-import type { OrderById } from "../utils/devToolkit";
 
 type ActionOption = "add" | "remove" | "none";
 
@@ -62,7 +61,7 @@ export function DropDown({ data, tags, onClick }: DropDownProps) {
     };
   }, [onClick]);
 
-  const [ contextData, setContextData ] = useCardSet();
+  const [, setContextData ] = useCardSet();
 
   const handleDropdownClick = (song: CardType, option: DropDownOption) => {
     if (option.kind !== "mutable") {

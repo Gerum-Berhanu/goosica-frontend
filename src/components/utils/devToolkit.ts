@@ -107,13 +107,21 @@ export function findSongById(id: string): CardType | undefined {
 
 // superset
 
-type AppState = Record<string, Record<string, string | number | boolean>>;
+interface FocusedCard {
+  isFocused: boolean,
+  id: string,
+  timeline: number
+}
+
+interface AppState {
+  focusedCard: FocusedCard
+}
 
 const appState: AppState = {
   focusedCard: {
     isFocused: false,
     id: "",
-    timeline: 0, // in seconds
+    timeline: 0, // maybe in seconds
   },
 };
 
