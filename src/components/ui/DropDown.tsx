@@ -70,15 +70,15 @@ export function DropDown({ data, tags, onClick }: DropDownProps) {
     }
 
     setContextData(prev => {
-      const clone: OrderById = { ...prev };
-      const currentCard = clone[song.id];
+      const clone = { ...prev };
+      const currentCard = clone.order[song.id];
 
       if (option.action === "add")
         currentCard.tags.push(option.key);
       else
         currentCard.tags = currentCard.tags.filter(tag => tag !== option.key);
 
-      clone[song.id] = currentCard;
+      clone.order[song.id] = currentCard;
 
       return clone;
     });

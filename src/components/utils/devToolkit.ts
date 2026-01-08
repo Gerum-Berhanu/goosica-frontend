@@ -65,6 +65,8 @@ const rawCollection: CardType[] = [
   },
 ];
 
+// order by id
+
 export type OrderById = Record<string, CardType>;
 
 export function orderById(rawCollection: CardType[]): OrderById {
@@ -77,6 +79,8 @@ export function orderById(rawCollection: CardType[]): OrderById {
 }
 
 export const cardsById = orderById(rawCollection);
+
+// group collection
 
 export type GroupCollectionType = Record<CardTag, string[]>;
 
@@ -99,4 +103,26 @@ export function groupByTag(cardsById: OrderById): GroupCollectionType {
 
 export function findSongById(id: string): CardType | undefined {
   return cardsById[id];
+}
+
+// superset
+
+type AppState = Record<string, Record<string, string | number | boolean>>;
+
+const appState: AppState = {
+  focusedCard: {
+    isFocused: false,
+    id: "",
+    timeline: 0, // in seconds
+  },
+};
+
+export interface SuperSet {
+  state: AppState,
+  order: OrderById
+}
+
+export const superset: SuperSet = {
+  state: appState,
+  order: cardsById
 }

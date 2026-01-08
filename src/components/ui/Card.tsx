@@ -39,7 +39,7 @@ export function Card({data, cardWidth}: CardProps) {
   const handleStatus = (song: CardType, status: CardStatus) => {
     setContextData(prev => {
       const clone = { ...prev };
-      clone[song.id].status = status;
+      clone.order[song.id].status = status;
       return clone;
     })
   }
