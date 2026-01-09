@@ -71,13 +71,24 @@ export function DropDown({ data, tags, onClick }: DropDownProps) {
     setContextData(prev => {
       const clone = { ...prev };
       const currentCard = clone.order[song.id];
+      let tagGroup = clone.state.tagGroup[option.key];
 
-      if (option.action === "add")
-        currentCard.tags.push(option.key);
-      else
+      if (option.action === "add") {
+        if (option.key === "q") {
+          currentCard.tags.push(option.key);
+          tagGroup.push(song.id);
+        } else {
+          currentCard.tags.unshift(option.key);
+          tagGroup.unshift(song.id);
+        }
+      }
+      else {
         currentCard.tags = currentCard.tags.filter(tag => tag !== option.key);
+        tagGroup = tagGroup.filter(id => id !== song.id);
+      }
 
       clone.order[song.id] = currentCard;
+      clone.state.tagGroup[option.key] = tagGroup;
 
       return clone;
     });

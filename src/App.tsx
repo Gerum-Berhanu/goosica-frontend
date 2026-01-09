@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, type Dispatch, type SetStateAction } from "react";
 import {Body} from "./components/layouts/Body";
 import {SideBar} from "./components/sections/SideBar";
-import { superset, type SuperSet, type GroupCollectionType, groupByTag } from "./components/utils/devToolkit";
+import { superset, type SuperSet, type GroupCollectionType } from "./components/utils/devToolkit";
 
 export const CardSetContext = createContext<[SuperSet, Dispatch<SetStateAction<SuperSet>>] | null>(null);
 
@@ -15,7 +15,7 @@ export const useCardSet = () => {
 
 function App() {
   const [contextData, setContextData] = useState<SuperSet>(superset);
-  const groupedCollection: GroupCollectionType = groupByTag(contextData.order);
+  const groupedCollection: GroupCollectionType = contextData.state.tagGroup;
 
   return (
     <CardSetContext value={[contextData, setContextData]}>

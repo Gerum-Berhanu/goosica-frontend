@@ -20,7 +20,7 @@ const rawCollection: CardType[] = [
     title: "Beat It",
     uploader: "Michael Jackson",
     imagePath: "./beat-it-thumbnail.jpg",
-    tags: ["t", "q", "f"],
+    tags: ["t", "f"],
     status: "onNone",
   },
   {
@@ -28,7 +28,7 @@ const rawCollection: CardType[] = [
     title: "Thriller",
     uploader: "Michael Jackson",
     imagePath: "./thriller-thumbnail.jpg",
-    tags: ["q", "f", "d"],
+    tags: ["t", "f"],
     status: "onNone",
   },
   {
@@ -44,7 +44,7 @@ const rawCollection: CardType[] = [
     title: "Lonely Night",
     uploader: "The Weeknd",
     imagePath: "./starboy-album-thumbnail.jpg",
-    tags: ["t", "q", "f"],
+    tags: ["t", "q"],
     status: "onNone",
   },
   {
@@ -52,7 +52,7 @@ const rawCollection: CardType[] = [
     title: "Starboy",
     uploader: "The Weeknd",
     imagePath: "./starboy-album-thumbnail.jpg",
-    tags: ["t"],
+    tags: ["t", "q"],
     status: "onNone",
   },
   {
@@ -60,7 +60,7 @@ const rawCollection: CardType[] = [
     title: "Love to Lay",
     uploader: "The Weeknd",
     imagePath: "./starboy-album-thumbnail.jpg",
-    tags: ["f"],
+    tags: ["t", "q", "d"],
     status: "onNone",
   },
 ];
@@ -101,6 +101,9 @@ export function groupByTag(cardsById: OrderById): GroupCollectionType {
   return grouped;
 }
 
+export const initTagGroup = groupByTag(cardsById);
+
+
 export function findSongById(id: string): CardType | undefined {
   return cardsById[id];
 }
@@ -114,7 +117,8 @@ interface FocusedCard {
 }
 
 interface AppState {
-  focusedCard: FocusedCard
+  focusedCard: FocusedCard,
+  tagGroup: GroupCollectionType,
 }
 
 const appState: AppState = {
@@ -123,6 +127,7 @@ const appState: AppState = {
     id: "",
     timeline: 0, // maybe in seconds
   },
+  tagGroup: initTagGroup
 };
 
 export interface SuperSet {
