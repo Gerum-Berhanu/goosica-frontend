@@ -10,10 +10,13 @@ interface BodyProps {
 
 export function Body({ group }: BodyProps) {
     const [ isSearched, setIsSearched ] = useState(false);
+    const [ query, setQuery ] = useState("");
 
-    const handleSearch = (query: string | undefined) => {
-      if (!query)
+    const handleSearch = (s: string | undefined) => {
+      if (!s)
         return;
+      
+      setQuery(s);
 
       // fetching data based on the provided query
 
@@ -30,7 +33,7 @@ export function Body({ group }: BodyProps) {
         <div className="h-full overflow-y-auto">
           {isSearched ? (
             // SearchResult
-            <SearchResult onReturn={handleReturn} />
+            <SearchResult query={query} onReturn={handleReturn} />
           ) : (
             // CardSet
             <CardSetContainer group={group} />

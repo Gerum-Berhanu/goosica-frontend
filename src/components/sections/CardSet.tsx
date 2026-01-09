@@ -30,7 +30,7 @@ export function CardSetContainer({ group }: CardSetContainerProps) {
   const headings: CardTag[] = ["t", "q", "f", "d"];
 
   return (
-    <div className="flex flex-col gap-8 px-3 py-8">
+    <div className="flex flex-col gap-4 px-2 py-4">
 
       {/* Card set */}
       {headings.map(tag => { 
