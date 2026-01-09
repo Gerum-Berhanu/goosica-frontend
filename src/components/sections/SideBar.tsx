@@ -20,7 +20,7 @@ export function SideBar() {
             data={contextData.order[contextData.state.focusedCard.id]}
           />
         ) : (
-          "No song is selected."
+          <div className="text-gray-500">No song is selected.</div>
         )}
       </div>
 

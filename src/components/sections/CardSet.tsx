@@ -4,7 +4,7 @@ import { findSongById, type GroupCollectionType } from "../utils/devToolkit";
 export type CardTag = "t" | "q" | "f" | "d";
 
 const TAG_LABELS: Record<CardTag, string> = {
-  t: "Today's Pick",
+  t: "Recently Played",
   q: "Queue",
   f: "Favorites",
   d: "Downloads",
@@ -30,7 +30,7 @@ export function CardSetContainer({ group }: CardSetContainerProps) {
   const headings: CardTag[] = ["t", "q", "f", "d"];
 
   return (
-    <div className="flex flex-col gap-8 px-2 md:px-8 py-8">
+    <div className="flex flex-col gap-8 px-3 py-8">
 
       {/* Card set */}
       {headings.map(tag => { 
@@ -46,14 +46,16 @@ export function CardSetContainer({ group }: CardSetContainerProps) {
             {/* ROW 2- Song list */}
             <div className="flex gap-4 overflow-x-auto pb-2">
               {
+                group[tag] && group[tag].length > 0 ?
                 group[tag]
                   .map(id => findSongById(id))
-                  .filter(song => song !== undefined)
+                  .filter((song): song is CardType => song !== undefined)
                   .map(song =>
                     <Card
                       key={`${song.id}-${tag}`}
                       data={song}
                     />)
+                  : <div className="flex items-center h-[50px] text-gray-500">No {TAG_LABELS[tag].toLowerCase()}.</div>
               }
             </div>
           </div>
