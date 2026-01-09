@@ -5,63 +5,66 @@ import type { CardType } from "./CardSet";
 
 interface SearchResultProps {
   query: string;
-  onReturn: ()=>void;
+  onReturn: () => void;
+}
+
+interface SearchRowProps {
+  title: React.ReactNode;
+  cards: CardType[];
+  showReturnButton?: boolean;
+  onReturn?: () => void;
+}
+
+const tempData: CardType = {
+  id: "R101",
+  title: "Zenith",
+  uploader: "Kavinsky",
+  imagePath: "./zenith-cover.jpg",
+  tags: [],
+  status: "onNone",
+};
+
+function SearchRow({ title, cards, showReturnButton = false, onReturn }: SearchRowProps) {
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="flex justify-between w-full">
+        <span className="text-3xl text-shadow-md/20">{title}</span>
+        {showReturnButton && onReturn && (
+          <button className="cursor-pointer" onClick={onReturn}>
+            <ChevronsLeft />
+          </button>
+        )}
+      </div>
+
+      <div className="flex gap-4 overflow-x-auto pb-2">
+        {cards.length > 0 ? (
+          cards.map((card, index) => <Card key={`${card.id}-${index}`} data={card} />)
+        ) : (
+          <div className="flex items-center h-[50px] text-gray-500">
+            No results found.
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
 
 export function SearchResult({ query, onReturn }: SearchResultProps) {
-  const [ contextData, ] = useCardSet();
+  const [contextData] = useCardSet();
 
-  const tempData: CardType = {
-    id: "R101",
-    title: "Zenith",
-    uploader: "Kavinsky",
-    imagePath: "./zenith-cover.jpg",
-    tags: [],
-    status: "onNone"
-  }
+  return (
+    <div className="flex flex-col gap-4 px-2 py-4">
+      <SearchRow
+        title={`Search result for "${query}"`}
+        cards={contextData.search}
+        showReturnButton={true}
+        onReturn={onReturn}
+      />
 
-    return (
-      <div className="flex flex-col gap-4 px-2 py-4">
-
-        {/* ROW 1 - Search set */}
-        <div className="flex flex-col gap-4">
-          {/* Search query */}
-          <div className="flex justify-between w-full">
-            <span className="text-3xl text-shadow-md/20">Search result for "{query}"</span>
-            <button className="cursor-pointer" onClick={()=>onReturn()}>
-              <ChevronsLeft/>
-            </button>
-          </div>
-
-          {/* Cards */}
-          <div className="flex gap-4 overflow-x-auto pb-2">
-            {contextData.search.map((result, index) => (
-              <Card
-                key={`search-${index}`}
-                data={result}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* ROW 2 - Similar results */}
-        <div className="flex flex-col gap-4">
-          {/* heading */}
-          <div className="flex justify-between w-full">
-            <span className="text-3xl text-shadow-md/20">Similar Results</span>
-          </div>
-
-          {/* Cards */}
-          <div className="flex gap-4 overflow-x-auto pb-2">
-            {[...Array(5)].fill(tempData).map((result, index) => (
-              <Card
-                key={`search-${index}`}
-                data={result}
-              />
-            ))}
-          </div>
-        </div>
-
-      </div>
-    );
+      <SearchRow
+        title="Similar Results"
+        cards={Array.from({ length: 5 }, () => tempData)}
+      />
+    </div>
+  );
 }
