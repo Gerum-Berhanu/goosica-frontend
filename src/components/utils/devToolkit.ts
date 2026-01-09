@@ -108,6 +108,59 @@ export function findSongById(id: string): CardType | undefined {
   return cardsById[id];
 }
 
+// search results
+
+export const searchResults: CardType[] = [
+  {
+    id: "S101",
+    title: "Zenith",
+    uploader: "Kavinsky",
+    imagePath: "./zenith-cover.jpg",
+    tags: [],
+    status: "onNone",
+  },
+  {
+    id: "S102",
+    title: "Zenith",
+    uploader: "Kavinsky",
+    imagePath: "./zenith-cover.jpg",
+    tags: [],
+    status: "onNone",
+  },
+  {
+    id: "S103",
+    title: "Zenith",
+    uploader: "Kavinsky",
+    imagePath: "./zenith-cover.jpg",
+    tags: [],
+    status: "onNone",
+  },
+  {
+    id: "S104",
+    title: "Zenith",
+    uploader: "Kavinsky",
+    imagePath: "./zenith-cover.jpg",
+    tags: [],
+    status: "onNone",
+  },
+  {
+    id: "S105",
+    title: "Zenith",
+    uploader: "Kavinsky",
+    imagePath: "./zenith-cover.jpg",
+    tags: [],
+    status: "onNone",
+  },
+  {
+    id: "S106",
+    title: "Zenith",
+    uploader: "Kavinsky",
+    imagePath: "./zenith-cover.jpg",
+    tags: [],
+    status: "onNone",
+  },
+];
+
 // superset
 
 interface FocusedCard {
@@ -132,10 +185,12 @@ const appState: AppState = {
 
 export interface SuperSet {
   state: AppState,
-  order: OrderById
+  order: OrderById,
+  search: CardType[],
 }
 
 export const superset: SuperSet = {
   state: appState,
-  order: cardsById
+  order: cardsById,
+  search: searchResults
 }

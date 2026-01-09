@@ -1,11 +1,14 @@
 import { Card } from "../ui/Card";
 import { ChevronsLeft } from "lucide-react";
+import { useCardSet } from "../../App";
 
 interface SearchResultProps {
   onReturn: ()=>void;
 }
 
 export function SearchResult({ onReturn }: SearchResultProps) {
+  const [ contextData, ] = useCardSet();
+
     return (
       <div className="flex flex-col gap-8 px-2 md:px-8 py-8">
         {/* ROW 1 - Search title */}
@@ -18,16 +21,14 @@ export function SearchResult({ onReturn }: SearchResultProps) {
 
         {/* ROW 2 - Cards */}
         {/* <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))]"> */}
-        {/* <div className="flex flex-wrap gap-4 justify-evenly">
-          {[...Array(7)].map((_, index) => (
+        <div className="flex flex-wrap gap-4 justify-evenly">
+          {contextData.search.map((result, index) => (
             <Card
-              key={index}
-              title="Zenith"
-              uploader="Kavinsky"
-              imagePath="./zenith-cover.jpg"
+              key={`search-${index}`}
+              data={result}
             />
           ))}
-        </div> */}
+        </div>
       </div>
     );
 }

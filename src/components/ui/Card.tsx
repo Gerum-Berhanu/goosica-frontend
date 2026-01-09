@@ -39,19 +39,25 @@ export function Card({data, cardWidth}: CardProps) {
   const handleStatus = (song: CardType, status: CardStatus) => {
     setContextData(prev => {
       // FIXME: LLMs have told me this is not a perfect cloning but a shallow one which may cause a problem
-      const clone = { ...prev };
-      const focusedCard = clone.state.focusedCard;
+      const superset = { ...prev };
+      const focusedCard = superset.state.focusedCard;
 
       if (status === "onPlay") {
         if (focusedCard.isFocused && focusedCard.id !== song.id) {
-          clone.order[focusedCard.id].status = "onNone";
+          superset.order[focusedCard.id].status = "onNone";
         }
         focusedCard.isFocused = true;
         focusedCard.id = song.id;
-      } 
+      }
 
-      clone.order[song.id].status = status;
-      return clone;
+      // if the song is new (from search results) add it to the superset
+      if (!superset.order[song.id]) {
+        superset.order[song.id] = song;
+      }
+
+      superset.state.focusedCard = focusedCard;
+      superset.order[song.id].status = status;
+      return superset;
     });
   };
 
