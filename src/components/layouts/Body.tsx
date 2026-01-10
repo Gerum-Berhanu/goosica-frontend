@@ -3,6 +3,7 @@ import { CardSetContainer } from "../sections/CardSet";
 import { NavBar } from "../sections/NavBar";
 import { SearchResult } from "../sections/SearchResult";
 import type { GroupCollectionType } from "../utils/devToolkit";
+import { PlayBar } from "../sections/PlayBar";
 
 interface BodyProps {
   group: GroupCollectionType;
@@ -30,7 +31,7 @@ export function Body({ group }: BodyProps) {
     return (
       <div className="bg-slate-200 flex flex-col h-full overflow-y-auto w-full">
         <NavBar onSearch={handleSearch}/>
-        <div className="h-full overflow-y-auto">
+        <div className="overflow-y-auto">
           {isSearched ? (
             // SearchResult
             <SearchResult query={query} onReturn={handleReturn} />
@@ -39,6 +40,7 @@ export function Body({ group }: BodyProps) {
             <CardSetContainer group={group} />
           )}
         </div>
+        <PlayBar />
       </div>
     );
 }

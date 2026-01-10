@@ -6,6 +6,7 @@
 }
 
 @layer base {
+
   /* Chrome, Edge, and Safari */
   ::-webkit-scrollbar {
     width: 4px;
@@ -54,4 +55,12 @@
     background: #A1A8B0;
   }
 
+}
+
+@layer utilities {
+  .shadow-md-all {
+    box-shadow:
+      0 0 6px -1px rgb(0 0 0 / 0.25),
+      0 0 4px -2px rgb(0 0 0 / 0.25);
+  }
 }
