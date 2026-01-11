@@ -13,6 +13,7 @@
     "@tailwindcss/vite": "^4.1.18",
     "clsx": "^2.1.1",
     "lucide-react": "^0.562.0",
+    "rc-slider": "^11.1.9",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-fast-marquee": "^1.6.5",
