@@ -1,6 +1,4 @@
 import Slider from "rc-slider";
-import "rc-slider/assets/index.css";
-
 import { ArrowLeftToLine, ArrowRightToLine, Pause, Play } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 

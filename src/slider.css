@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+/* rail (background) */
+.rc-slider-rail {
+    @apply h-1 bg-slate-300 rounded-full;
+}
+
+/* played part */
+.rc-slider-track {
+    @apply h-1 bg-slate-900 rounded-full;
+}
+
+/* handle (thumb) */
+.rc-slider-handle {
+    @apply w-3 h-3 bg-slate-900 rounded-full border-0;
+    margin-top: -4px;
+}
+
+/* remove default focus styles */
+.rc-slider-handle:focus {
+    @apply outline-none ring-0;
+}
+
+/* hover effect */
+.rc-slider-handle:hover {
+    @apply ring-4 ring-slate-900/20;
+}
