@@ -39,7 +39,7 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
   return (
     <AudioContext value={{ audioRef, currentTime, duration, seek }}>
       {children}
-      <audio ref={audioRef} src="./Oblivion.mp3" preload="metadata"/>
+      <audio ref={audioRef} src="./RetroMan.mp3" preload="metadata"/>
     </AudioContext>
   )
 }

@@ -1,7 +1,7 @@
 import { cn } from "../utils/devToolkit";
 import { DropDown } from "./DropDown";
 import Marquee from "react-fast-marquee";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { type CardStatus, type CardType } from "../sections/CardSet";
 import { useCardSet } from "../../App";
 import {
@@ -12,6 +12,7 @@ import {
   Play,
 } from "lucide-react";
 import Slider from "rc-slider";
+import { AudioContext } from "../utils/AudioProvider";
 
 interface CardProps {
   data: CardType;
@@ -35,7 +36,7 @@ export function Card({ data, cardWidth }: CardProps) {
     setShouldMarquee(text.scrollWidth > container.clientWidth);
   }, [data.title]);
 
-  const [contextData, setContextData] = useCardSet();
+  const [, setContextData] = useCardSet();
 
   const handleStatus = (song: CardType, status: CardStatus) => {
     setContextData((prev) => {
@@ -63,57 +64,12 @@ export function Card({ data, cardWidth }: CardProps) {
     });
   };
 
-  // audio state
-  const audioRef = useRef<HTMLAudioElement>(null);
-  const [duration, setDuration] = useState<number>(0);
-  const [currentTime, setCurrentTime] = useState<number>(0);
+  const audio = useContext(AudioContext);
+  if (!audio) return;
 
-  // attach event listener that reads the metadata of the audio and set the duration state
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-
-    const handleLoadedMetadata = () => {
-      setDuration(audio.duration);
-    };
-
-    audio.addEventListener("loadedmetadata", handleLoadedMetadata);
-
-    return () => {
-      audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
-    };
-  }, []);
-
-  // attach event listener that sets the currentTime state every time the audio player's time updates
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-
-    const handleTimeUpdate = () => {
-      setCurrentTime(audio.currentTime);
-    };
-
-    audio.addEventListener("timeupdate", handleTimeUpdate);
-
-    return () => {
-      audio.removeEventListener("timeupdate", handleTimeUpdate);
-    };
-  }, []);
-
-  // play/pause audio based on the value of data.status
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    data.status === "onPlay" ? audio.play() : audio.pause();
-  }, [data.status]);
-
-  // // syncing change in the timeline of the card with this play bar
-  // useEffect(() => {
-  //   const audio = audioRef.current;
-  //   if (!audio) return;
-  //   setCurrentTime(contextData.state.focusedCard.timeline);
-  //   audio.currentTime = contextData.state.focusedCard.timeline;
-  // }, [contextData.state.focusedCard.timeline]);
+  useEffect(()=>{
+    audio.seek(0);
+  }, [data.id]);
 
   return (
     <div
@@ -123,8 +79,6 @@ export function Card({ data, cardWidth }: CardProps) {
         cardWidth || "w-[150px] md:w-[250px]"
       )}
     >
-      {/* Media layer */}
-      <audio ref={audioRef} src="./Oblivion.mp3" preload="metadata" />
 
       {/* ROW 1 - Thumbnail display */}
       <div
@@ -165,6 +119,9 @@ export function Card({ data, cardWidth }: CardProps) {
             <Pause
               className="cursor-pointer"
               onClick={() => {
+                if (!audio.audioRef.current) return;
+                const currentAudio = audio.audioRef.current;
+                currentAudio.pause();
                 handleStatus(data, "onPause");
               }}
               stroke="white"
@@ -174,6 +131,9 @@ export function Card({ data, cardWidth }: CardProps) {
             <Play
               className="cursor-pointer"
               onClick={() => {
+                if (!audio.audioRef.current) return;
+                const currentAudio = audio.audioRef.current;
+                currentAudio.play();
                 handleStatus(data, "onPlay");
               }}
               stroke="white"
@@ -203,12 +163,12 @@ export function Card({ data, cardWidth }: CardProps) {
           {data.status !== "onNone" && (
             <Slider
               min={0}
-              max={duration}
-              value={currentTime}
+              max={audio.audioRef.current?.duration}
+              value={audio.audioRef.current?.currentTime}
               onChange={(value) => {
-                if (typeof value === "number" && audioRef.current) {
-                  audioRef.current.currentTime = value;
-                  setCurrentTime(value);
+                if (typeof value === "number" && audio.audioRef.current) {
+                  audio.audioRef.current.currentTime = value;
+                  // setCurrentTime(value);
                   // contextData.state.focusedCard.timeline = currentTime;
                 }
               }}
