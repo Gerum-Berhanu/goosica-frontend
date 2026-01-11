@@ -57,43 +57,24 @@ export function PlayBar() {
       <audio ref={audioRef} src="./Oblivion.mp3" preload="metadata" />
 
       {/* UI layer */}
-      <div className="grid grid-flow-col w-full">
+      <div className="grid grid-cols-5 grid-flow-row w-full">
+
         {/* row 1 and 2, col 1 */}
         <div
           style={{ backgroundImage: `url(./beat-it-thumbnail.jpg)` }}
-          className="bg-contain bg-center bg-no-repeat bg-slate-300 row-span-4"
+          className="bg-contain bg-center bg-no-repeat bg-slate-300"
         ></div>
 
         {/* row 1, col 2 */}
-        <div className="col-span-2 row-span-3">
+        <div className="col-span-2">
           <div className="flex flex-col items-start px-2">
             <span className="text-xl whitespace-nowrap">Beat It</span>
             <span className="text-sm">Michael Jackson</span>
           </div>
         </div>
 
-        {/* row 2, col 2 and 3 */}
-        <div className="col-span-4 flex gap-2 items-center justify-center px-2">
-          <Slider
-            min={0}
-            max={duration}
-            value={currentTime}
-            onChange={(value) => {
-              if (typeof value === "number" && audioRef.current) {
-                audioRef.current.currentTime = value;
-                setCurrentTime(value);
-              }
-            }}
-          />
-          <div className="flex gap-1">
-            <span>{formatTime(audioRef.current?.currentTime)}</span>
-            <span>/</span>
-            <span>{formatTime(audioRef.current?.duration)}</span>
-          </div>
-        </div>
-
         {/* row 1, col 3 */}
-        <div className="col-span-2 row-span-3">
+        <div className="col-span-2">
           <div className="flex h-full items-center justify-evenly w-full">
             <ArrowLeftToLine className="cursor-pointer" stroke="black" />
             {audioRef.current?.paused ? (
@@ -120,6 +101,27 @@ export function PlayBar() {
             <ArrowRightToLine className="cursor-pointer" stroke="black" />
           </div>
         </div>
+
+        {/* row 2, col 2 and 3 */}
+        <div className="col-span-5 flex gap-2 items-center justify-center px-4">
+          <Slider
+            min={0}
+            max={duration}
+            value={currentTime}
+            onChange={(value) => {
+              if (typeof value === "number" && audioRef.current) {
+                audioRef.current.currentTime = value;
+                setCurrentTime(value);
+              }
+            }}
+          />
+          <div className="flex gap-1">
+            <span>{formatTime(audioRef.current?.currentTime)}</span>
+            <span>/</span>
+            <span>{formatTime(audioRef.current?.duration)}</span>
+          </div>
+        </div>
+
       </div>
     </div>
   );
