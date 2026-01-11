@@ -2,6 +2,18 @@ import Slider from "rc-slider";
 import { ArrowLeftToLine, ArrowRightToLine, Pause, Play } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
+function formatTime(seconds: number | undefined): string {
+  if (seconds === undefined || isNaN(seconds)) return "0:00";
+
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+
+  // Pad seconds with leading zero if less than 10
+  const paddedSecs = secs < 10 ? `0${secs}` : secs;
+
+  return `${mins}:${paddedSecs}`;
+}
+
 export function PlayBar() {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [ duration, setDuration ] = useState<number>(0);
@@ -41,7 +53,6 @@ export function PlayBar() {
 
   return (
     <div className="bg-slate-200 md:hidden flex shadow-md-all w-full">
-
       {/* Media layer */}
       <audio ref={audioRef} src="./Oblivion.mp3" preload="metadata" />
 
@@ -62,7 +73,7 @@ export function PlayBar() {
         </div>
 
         {/* row 2, col 2 and 3 */}
-        <div className="col-span-4 px-2">
+        <div className="col-span-4 flex gap-2 items-center justify-center px-2">
           <Slider
             min={0}
             max={duration}
@@ -74,6 +85,11 @@ export function PlayBar() {
               }
             }}
           />
+          <div className="flex gap-1">
+            <span>{formatTime(audioRef.current?.currentTime)}</span>
+            <span>/</span>
+            <span>{formatTime(audioRef.current?.duration)}</span>
+          </div>
         </div>
 
         {/* row 1, col 3 */}
