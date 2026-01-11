@@ -48,6 +48,7 @@ export function Card({data, cardWidth}: CardProps) {
         }
         focusedCard.isFocused = true;
         focusedCard.id = song.id;
+        focusedCard.timeline = 0; // currently this has no use
       }
 
       // if the song is new (from search results) add it to the superset

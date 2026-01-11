@@ -4,6 +4,7 @@ import { NavBar } from "../sections/NavBar";
 import { SearchResult } from "../sections/SearchResult";
 import type { GroupCollectionType } from "../utils/devToolkit";
 import { PlayBar } from "../sections/PlayBar";
+import { useCardSet } from "../../App";
 
 interface BodyProps {
   group: GroupCollectionType;
@@ -12,6 +13,7 @@ interface BodyProps {
 export function Body({ group }: BodyProps) {
     const [ isSearched, setIsSearched ] = useState(false);
     const [ query, setQuery ] = useState("");
+    const [ contextData, ] = useCardSet();
 
     const handleSearch = (s: string | undefined) => {
       if (!s)
@@ -30,7 +32,7 @@ export function Body({ group }: BodyProps) {
 
     return (
       <div className="bg-slate-200 flex flex-col h-full overflow-y-auto w-full">
-        <NavBar onSearch={handleSearch}/>
+        <NavBar onSearch={handleSearch} />
         <div className="overflow-y-auto">
           {isSearched ? (
             // SearchResult
@@ -40,7 +42,10 @@ export function Body({ group }: BodyProps) {
             <CardSetContainer group={group} />
           )}
         </div>
-        <PlayBar />
+        {(contextData.state.focusedCard.isFocused &&
+          contextData.state.focusedCard.isFocused) && 
+          <PlayBar />
+        }
       </div>
     );
 }
