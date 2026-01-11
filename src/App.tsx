@@ -2,6 +2,7 @@ import { createContext, useContext, useState, type Dispatch, type SetStateAction
 import {Body} from "./components/layouts/Body";
 import {SideBar} from "./components/sections/SideBar";
 import { superset, type SuperSet, type GroupCollectionType } from "./components/utils/devToolkit";
+import { AudioProvider } from "./components/utils/AudioProvider";
 
 export const CardSetContext = createContext<[SuperSet, Dispatch<SetStateAction<SuperSet>>] | null>(null);
 
@@ -18,12 +19,14 @@ function App() {
   const groupedCollection: GroupCollectionType = contextData.state.tagGroup;
 
   return (
-    <CardSetContext value={[contextData, setContextData]}>
-      <div className="flex h-lvh w-full">
-        <SideBar/>
-        <Body group={groupedCollection}/>
-      </div>
-    </CardSetContext>
+    <AudioProvider>
+      <CardSetContext value={[contextData, setContextData]}>
+        <div className="flex h-lvh w-full">
+          <SideBar/>
+          <Body group={groupedCollection}/>
+        </div>
+      </CardSetContext>
+    </AudioProvider>
   );
 }
 

@@ -21,6 +21,7 @@ export function PlayBar() {
   const [duration, setDuration] = useState<number>(0);
   const [currentTime, setCurrentTime] = useState<number>(0);
 
+  // attach event listener that reads the metadata of the audio and set the duration state
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -36,6 +37,7 @@ export function PlayBar() {
     };
   }, []);
 
+  // attach event listener that sets the currentTime state every time the audio player's time updates
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -51,21 +53,35 @@ export function PlayBar() {
     };
   }, []);
 
-  const [contextData, setContextData ] = useCardSet();
+  const [contextData, setContextData] = useCardSet();
   const currentSong = contextData.order[contextData.state.focusedCard.id];
+  // const currentTimeline = contextData.state.focusedCard.timeline;
+  // const [currentTime, setCurrentTime] = useState<number>(
+  //   contextData.state.focusedCard.timeline
+  // );
 
+  // syncing the play/pause action along with the click event of the card one
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
     currentSong.status === "onPlay" ? audio.play() : audio.pause();
   }, [currentSong.status]);
 
+  // resetting audio time whenever a new song is played
   useEffect(() => {
     setCurrentTime(0);
     const audio = audioRef.current;
     if (!audio) return;
     audio.currentTime = 0;
   }, [currentSong.id]);
+
+  // // syncing change in the timeline of the card with this play bar
+  // useEffect(()=>{
+  //   const audio = audioRef.current;
+  //   if (!audio) return;
+  //   setCurrentTime(contextData.state.focusedCard.timeline);
+  //   audio.currentTime = contextData.state.focusedCard.timeline;
+  // }, [contextData.state.focusedCard.timeline]);
 
   const handleStatus = (song: CardType, status: CardStatus) => {
     setContextData((prev) => {
@@ -76,7 +92,6 @@ export function PlayBar() {
       if (status === "onPlay") {
         // if another song was playing previously, reset everything related to it
         if (focusedCard.isFocused && focusedCard.id !== song.id) {
-          console.log("is entering here #1")
           superset.order[focusedCard.id].status = "onNone";
           focusedCard.timeline = 0;
         }
@@ -111,7 +126,9 @@ export function PlayBar() {
         {/* row 1, col 2 */}
         <div className="col-span-2">
           <div className="flex flex-col items-start px-2">
-            <span className="text-md whitespace-nowrap">{currentSong.title}</span>
+            <span className="text-md whitespace-nowrap">
+              {currentSong.title}
+            </span>
             <span className="text-xs">{currentSong.uploader}</span>
           </div>
         </div>
@@ -133,7 +150,7 @@ export function PlayBar() {
                 className="cursor-pointer"
                 stroke="black"
                 onClick={() => {
-                  handleStatus(currentSong, "onPause")
+                  handleStatus(currentSong, "onPause");
                 }}
               />
             )}
@@ -142,7 +159,7 @@ export function PlayBar() {
         </div>
 
         {/* row 2, col 2 and 3 */}
-        <div className="col-span-5 flex gap-2 items-center justify-center px-4">
+        <div className="col-span-5 flex gap-2 items-end justify-center px-4">
           <Slider
             min={0}
             max={duration}
@@ -150,7 +167,8 @@ export function PlayBar() {
             onChange={(value) => {
               if (typeof value === "number" && audioRef.current) {
                 audioRef.current.currentTime = value;
-                setCurrentTime(() => value);
+                setCurrentTime(value);
+                contextData.state.focusedCard.timeline = currentTime;
               }
             }}
           />
