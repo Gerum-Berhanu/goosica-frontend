@@ -50,7 +50,7 @@ function SearchRow({ title, cards, showReturnButton = false, onReturn }: SearchR
 }
 
 export function SearchResult({ query, onReturn }: SearchResultProps) {
-  const [contextData] = useCardSet();
+  const [contextData,] = useCardSet();
 
   return (
     <div className="flex flex-col gap-4 px-2 py-4">

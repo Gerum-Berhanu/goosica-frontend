@@ -36,7 +36,7 @@ export function Card({ data, cardWidth }: CardProps) {
     setShouldMarquee(text.scrollWidth > container.clientWidth);
   }, [data.title]);
 
-  const [, setContextData] = useCardSet();
+  const [contextData, setContextData] = useCardSet();
 
   const handleStatus = (song: CardType, status: CardStatus) => {
     setContextData((prev) => {
@@ -67,9 +67,10 @@ export function Card({ data, cardWidth }: CardProps) {
   const audio = useContext(AudioContext);
   if (!audio) return;
 
+  // resetting the timeline whenever a new song is selected
   useEffect(()=>{
     audio.seek(0);
-  }, [data.id]);
+  }, [contextData.state.focusedCard.id]);
 
   return (
     <div

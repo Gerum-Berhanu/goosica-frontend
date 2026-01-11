@@ -51,14 +51,14 @@ export function PlayBar() {
   const audio = useContext(AudioContext);
   if (!audio) return;
 
-  useEffect(()=>{
+  // resetting the timeline whenever a new song is selected
+  useEffect(() => {
     audio.seek(0);
   }, [currentSong.id]);
 
   return (
     <div className="bg-slate-200 md:hidden flex shadow-md-all w-full">
       <div className="grid grid-cols-5 grid-flow-row w-full">
-
         {/* row 1 and 2, col 1 */}
         <div
           style={{ backgroundImage: `url(${currentSong.imagePath})` }}
@@ -124,7 +124,6 @@ export function PlayBar() {
             <span>{formatTime(audio.audioRef.current?.duration)}</span>
           </div>
         </div>
-
       </div>
     </div>
   );
