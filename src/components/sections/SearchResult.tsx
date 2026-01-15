@@ -1,7 +1,7 @@
 import { Card } from "../ui/Card";
 import { ChevronsLeft } from "lucide-react";
-import { useCardSet } from "../../App";
 import type { CardType } from "./CardSet";
+import { useSearch } from "../context/SearchProvider";
 
 interface SearchResultProps {
   query: string;
@@ -50,13 +50,13 @@ function SearchRow({ title, cards, showReturnButton = false, onReturn }: SearchR
 }
 
 export function SearchResult({ query, onReturn }: SearchResultProps) {
-  const [contextData,] = useCardSet();
+  const searchResults = useSearch();
 
   return (
     <div className="flex flex-col gap-4 px-2 py-4">
       <SearchRow
         title={`Search result for "${query}"`}
-        cards={contextData.search}
+        cards={searchResults}
         showReturnButton={true}
         onReturn={onReturn}
       />

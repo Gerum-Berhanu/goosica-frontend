@@ -39,8 +39,8 @@ function tagReducer(state: TagContextType, action: TagAction): TagContextType {
 
 
 // Contexts (state and dispatch)
-export const TagStateContext = createContext<TagContextType | null>(null);
-export const TagDispatchContext = createContext<Dispatch<TagAction> | null>(null);
+const TagStateContext = createContext<TagContextType | null>(null);
+const TagDispatchContext = createContext<Dispatch<TagAction> | null>(null);
 
 export function useTagState() {
   const ctx = useContext(TagStateContext);
