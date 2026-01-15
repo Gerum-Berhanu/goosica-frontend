@@ -2,6 +2,7 @@ import { X } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { type CardTag, type CardType } from "../sections/CardSet";
 import { useCardSet } from "../../App";
+import { useTagDispatch } from "../context/TagProvider";
 
 type ActionOption = "add" | "remove" | "none";
 
@@ -62,7 +63,8 @@ export function DropDown({ data, tags, onClick }: DropDownProps) {
   }, [onClick]);
 
   const [, setContextData ] = useCardSet();
-
+  const tagDispatch = useTagDispatch();
+  
   const handleDropdownClick = (song: CardType, option: DropDownOption) => {
     if (option.kind !== "mutable") {
       return;
@@ -71,24 +73,22 @@ export function DropDown({ data, tags, onClick }: DropDownProps) {
     setContextData(prev => {
       const clone = { ...prev };
       const currentCard = clone.order[song.id];
-      let tagGroup = clone.state.tagGroup[option.key];
 
       if (option.action === "add") {
         if (option.key === "q") {
           currentCard.tags.push(option.key);
-          tagGroup.push(song.id);
+          tagDispatch({ type: "APPEND", tag: option.key, id: song.id });
         } else {
           currentCard.tags.unshift(option.key);
-          tagGroup.unshift(song.id);
+          tagDispatch({ type: "PREPEND", tag: option.key, id: song.id });
         }
       }
       else {
         currentCard.tags = currentCard.tags.filter(tag => tag !== option.key);
-        tagGroup = tagGroup.filter(id => id !== song.id);
+        tagDispatch({ type: "REMOVE", tag: option.key, id: song.id });
       }
 
       clone.order[song.id] = currentCard;
-      clone.state.tagGroup[option.key] = tagGroup;
 
       return clone;
     });

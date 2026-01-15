@@ -3,7 +3,7 @@ import { ArrowLeftToLine, ArrowRightToLine, Pause, Play } from "lucide-react";
 import { useContext, useEffect } from "react";
 import type { CardStatus, CardType } from "./CardSet";
 import { useCardSet } from "../../App";
-import { AudioContext } from "../utils/AudioProvider";
+import { AudioContext } from "../context/AudioProvider";
 
 function formatTime(seconds: number | undefined): string {
   if (seconds === undefined || isNaN(seconds)) return "0:00";

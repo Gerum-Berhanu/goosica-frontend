@@ -2,15 +2,10 @@ import { useState } from "react";
 import { CardSetContainer } from "../sections/CardSet";
 import { NavBar } from "../sections/NavBar";
 import { SearchResult } from "../sections/SearchResult";
-import type { GroupCollectionType } from "../utils/devToolkit";
 import { PlayBar } from "../sections/PlayBar";
 import { useCardSet } from "../../App";
 
-interface BodyProps {
-  group: GroupCollectionType;
-}
-
-export function Body({ group }: BodyProps) {
+export function Body() {
     const [ isSearched, setIsSearched ] = useState(false);
     const [ query, setQuery ] = useState("");
     const [ contextData, ] = useCardSet();
@@ -39,7 +34,7 @@ export function Body({ group }: BodyProps) {
             <SearchResult query={query} onReturn={handleReturn} />
           ) : (
             // CardSet
-            <CardSetContainer group={group} />
+            <CardSetContainer/>
           )}
         </div>
         {(contextData.state.focusedCard.isFocused &&

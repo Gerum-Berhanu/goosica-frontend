@@ -1,5 +1,6 @@
 import { Card } from "../ui/Card";
-import { findSongById, type GroupCollectionType } from "../utils/devToolkit";
+import { findSongById } from "../utils/devToolkit";
+import { useTagState } from "../context/TagProvider";
 
 export type CardTag = "t" | "q" | "f" | "d";
 
@@ -22,13 +23,11 @@ export interface CardType {
   status?: CardStatus;
 };
 
-interface CardSetContainerProps {
-  group: GroupCollectionType;
-}
-
-export function CardSetContainer({ group }: CardSetContainerProps) {
+export function CardSetContainer() {
   const headings: CardTag[] = ["t", "q", "f", "d"];
 
+  const tagGroup = useTagState();
+  
   return (
     <div className="flex flex-col gap-4 px-2 py-4">
 
@@ -46,8 +45,8 @@ export function CardSetContainer({ group }: CardSetContainerProps) {
             {/* ROW 2- Song list */}
             <div className="flex gap-4 overflow-x-auto pb-2">
               {
-                group[tag] && group[tag].length > 0 ?
-                group[tag]
+                tagGroup[tag] && tagGroup[tag].length > 0 ?
+                tagGroup[tag]
                   .map(id => findSongById(id))
                   .filter((song): song is CardType => song !== undefined)
                   .map(song =>

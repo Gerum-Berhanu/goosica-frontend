@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import type { CardTag, CardType } from "../sections/CardSet";
+import type { CardType } from "../sections/CardSet";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -80,29 +80,6 @@ export function orderById(rawCollection: CardType[]): OrderById {
 
 export const cardsById = orderById(rawCollection);
 
-// group collection
-
-export type GroupCollectionType = Record<CardTag, string[]>;
-
-export function groupByTag(cardsById: OrderById): GroupCollectionType {
-  const grouped: GroupCollectionType = {
-    t: [],
-    q: [],
-    f: [],
-    d: [],
-  };
-
-  for (const id in cardsById) {
-    for (const tag of cardsById[id].tags) {
-      grouped[tag].push(id);
-    }
-  }
-
-  return grouped;
-}
-
-export const initTagGroup = groupByTag(cardsById);
-
 
 export function findSongById(id: string): CardType | undefined {
   return cardsById[id];
@@ -171,7 +148,6 @@ interface FocusedCard {
 
 interface AppState {
   focusedCard: FocusedCard,
-  tagGroup: GroupCollectionType,
 }
 
 const appState: AppState = {
@@ -180,7 +156,6 @@ const appState: AppState = {
     id: "",
     timeline: 0, // maybe in seconds
   },
-  tagGroup: initTagGroup
 };
 
 export interface SuperSet {

@@ -12,7 +12,7 @@ import {
   Play,
 } from "lucide-react";
 import Slider from "rc-slider";
-import { AudioContext } from "../utils/AudioProvider";
+import { AudioContext } from "../context/AudioProvider";
 
 interface CardProps {
   data: CardType;
