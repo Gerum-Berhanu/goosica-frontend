@@ -3,14 +3,14 @@ import { CardSetContainer } from "../sections/CardSet";
 import { NavBar } from "../sections/NavBar";
 import { SearchResult } from "../sections/SearchResult";
 import { PlayBar } from "../sections/PlayBar";
-import { useCardSet } from "../../App";
 import { secondSearchResult } from "../context/searchEntry";
 import { useSongDispatch } from "../context/SongProvider";
+import { useFocusedCard } from "../context/FocusedCardProvider";
 
 export function Body() {
     const [ isSearched, setIsSearched ] = useState(false);
     const [ query, setQuery ] = useState("");
-    const [ contextData, ] = useCardSet();
+    const [focusedCard,] = useFocusedCard();
     
     const songDispatch = useSongDispatch();
 
@@ -27,7 +27,6 @@ export function Body() {
       songDispatch({ type: "ADD_SONGS", songs: secondSearchResult })
 
       setIsSearched(true);
-      console.log("Body > handleSearch");
     }
 
     const handleReturn = () => {
@@ -46,8 +45,7 @@ export function Body() {
             <CardSetContainer/>
           )}
         </div>
-        {(contextData.state.focusedCard.isFocused &&
-          contextData.state.focusedCard.isFocused) && 
+        {focusedCard.isFocused &&
           <PlayBar />
         }
       </div>

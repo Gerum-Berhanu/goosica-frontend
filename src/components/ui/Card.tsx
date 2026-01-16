@@ -3,7 +3,6 @@ import { DropDown } from "./DropDown";
 import Marquee from "react-fast-marquee";
 import { useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { type CardStatus, type CardType } from "../sections/CardSet";
-import { useCardSet } from "../../App";
 import {
   ArrowLeftToLine,
   ArrowRightToLine,
@@ -14,6 +13,7 @@ import {
 import Slider from "rc-slider";
 import { AudioContext } from "../context/AudioProvider";
 import { useSongDispatch } from "../context/SongProvider";
+import { useFocusedCard } from "../context/FocusedCardProvider";
 
 interface CardProps {
   data: CardType;
@@ -37,37 +37,26 @@ export function Card({ data, cardWidth }: CardProps) {
     setShouldMarquee(text.scrollWidth > container.clientWidth);
   }, [data.title]);
 
-  const [contextData, setContextData] = useCardSet();
+  const [focusedCard, setFocusedCard] = useFocusedCard();
   const songDispatch = useSongDispatch();
 
   const handleStatus = (song: CardType, status: CardStatus) => {
-    setContextData((prev) => {
-      // FIXME: LLMs have told me this is not a perfect cloning but a shallow one which may cause a problem
-      const superset = { ...prev };
-      const focusedCard = superset.state.focusedCard;
-
-      // // if the song is new (for example, from search results) add it to the collection
-      // if (!songState[song.id]) {
-      //   songDispatch({ type: "ADD_SONG", song: song });
-      // }
+    setFocusedCard((prev) => {
+      let cloneFocused = {...prev};
 
       if (status === "onPlay") {
         songDispatch({ type: "UPDATE_STATUS", status: "onPlay", id: song.id });
         
         // if another song was playing previously, reset everything related to it
-        if (focusedCard.isFocused && focusedCard.id !== song.id) {
-          songDispatch({ type: "UPDATE_STATUS", status: "onNone", id: focusedCard.id });
-          focusedCard.timeline = 0; // currently this has no use
+        if (cloneFocused.isFocused && cloneFocused.id !== song.id) {
+          songDispatch({ type: "UPDATE_STATUS", status: "onNone", id: cloneFocused.id });
         }
 
-        focusedCard.isFocused = true;
-        focusedCard.id = song.id;
+        cloneFocused = {...cloneFocused, isFocused: true, id: song.id};
       } else
         songDispatch({ type: "UPDATE_STATUS", status: "onPause", id: song.id });
 
-
-      superset.state.focusedCard = focusedCard;
-      return superset;
+      return cloneFocused;
     });
   };
 
@@ -77,7 +66,7 @@ export function Card({ data, cardWidth }: CardProps) {
   // resetting the timeline whenever a new song is selected
   useEffect(()=>{
     audio.seek(0);
-  }, [contextData.state.focusedCard.id]);
+  }, [focusedCard.id]);
 
   return (
     <div

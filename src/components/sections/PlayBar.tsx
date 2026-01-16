@@ -2,9 +2,9 @@ import Slider from "rc-slider";
 import { ArrowLeftToLine, ArrowRightToLine, Pause, Play } from "lucide-react";
 import { useContext, useEffect } from "react";
 import type { CardStatus, CardType } from "./CardSet";
-import { useCardSet } from "../../App";
 import { AudioContext } from "../context/AudioProvider";
 import { useSongState, useSongDispatch } from "../context/SongProvider";
+import { useFocusedCard } from "../context/FocusedCardProvider";
 
 function formatTime(seconds: number | undefined): string {
   if (seconds === undefined || isNaN(seconds)) return "0:00";
@@ -19,17 +19,15 @@ function formatTime(seconds: number | undefined): string {
 }
 
 export function PlayBar() {
-  const [contextData, setContextData] = useCardSet();
+  const [focusedCard, setFocusedCard] = useFocusedCard();
   const songState = useSongState();
   const songDispatch = useSongDispatch();
 
-  const currentSong = songState[contextData.state.focusedCard.id];
+  const currentSong = songState[focusedCard.id];
 
   const handleStatus = (song: CardType, status: CardStatus) => {
-    setContextData((prev) => {
-      // FIXME: LLMs have told me this is not a perfect cloning but a shallow one which may cause a problem
-      const superset = { ...prev };
-      const focusedCard = superset.state.focusedCard;
+    setFocusedCard((prev) => {
+      let cloneFocused = {...prev};
 
       if (status === "onPlay") {
         songDispatch({ type: "UPDATE_STATUS", status: "onPlay", id: song.id });
@@ -37,21 +35,13 @@ export function PlayBar() {
         // if another song was playing previously, reset everything related to it
         if (focusedCard.isFocused && focusedCard.id !== song.id) {
           songDispatch({ type: "UPDATE_STATUS", status: "onNone", id: focusedCard.id });
-          focusedCard.timeline = 0;
         }
 
-        focusedCard.isFocused = true;
-        focusedCard.id = song.id;
+        cloneFocused = {...cloneFocused, isFocused: true, id: song.id};
       } else
         songDispatch({ type: "UPDATE_STATUS", status: "onPause", id: song.id });
 
-      // if the song is new (from search results) add it to the collection
-      if (!songState[song.id]) {
-        songDispatch({ type: "ADD_SONG", song: song });
-      }
-
-      superset.state.focusedCard = focusedCard;
-      return superset;
+      return cloneFocused;
     });
   };
 
