@@ -1,5 +1,5 @@
 import { createContext, useContext, useReducer, type Dispatch } from "react";
-import { cardsById, type OrderById } from "./songContextTools";
+import { initSongsById, type OrderById } from "./songContextTools";
 import type { CardStatus, CardTag, CardType } from "../sections/CardSet";
 
 type SongContextType = OrderById;
@@ -69,7 +69,7 @@ export function useSongDispatch() {
 
 // Provider component
 export function SongProvider({ children }: { children: React.ReactNode }) {
-  const [songsById, dispatch] = useReducer(songReducer, cardsById);
+  const [songsById, dispatch] = useReducer(songReducer, initSongsById);
 
   return (
     <SongStateContext value={songsById}>

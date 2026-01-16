@@ -62,4 +62,4 @@ export function orderById(rawCollection: CardType[]): OrderById {
   }, {});
 }
 
-export const cardsById = orderById(rawCollection);
+export const initSongsById = orderById(rawCollection);

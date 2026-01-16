@@ -1,7 +1,7 @@
-import { cardsById, type OrderById } from "./songContextTools";
+import { initSongsById, type OrderById } from "./songContextTools";
 import type { TagContextType } from "./TagProvider";
 
-export function groupByTag(cardsById: OrderById): TagContextType {
+export function groupByTag(initSongsById: OrderById): TagContextType {
   const grouped: TagContextType = {
     t: [],
     q: [],
@@ -9,8 +9,8 @@ export function groupByTag(cardsById: OrderById): TagContextType {
     d: [],
   };
 
-  for (const id in cardsById) {
-    for (const tag of cardsById[id].tags) {
+  for (const id in initSongsById) {
+    for (const tag of initSongsById[id].tags) {
       grouped[tag].push(id);
     }
   }
@@ -18,4 +18,4 @@ export function groupByTag(cardsById: OrderById): TagContextType {
   return grouped;
 }
 
-export const initTagGroup = groupByTag(cardsById);
+export const initTagGroup = groupByTag(initSongsById);
