@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import Slider from "rc-slider";
 import { AudioContext } from "../context/AudioProvider";
-import { useSongDispatch, useSongState } from "../context/SongProvider";
+import { useSongDispatch } from "../context/SongProvider";
 
 interface CardProps {
   data: CardType;
@@ -38,7 +38,6 @@ export function Card({ data, cardWidth }: CardProps) {
   }, [data.title]);
 
   const [contextData, setContextData] = useCardSet();
-  const songState = useSongState();
   const songDispatch = useSongDispatch();
 
   const handleStatus = (song: CardType, status: CardStatus) => {
@@ -46,6 +45,11 @@ export function Card({ data, cardWidth }: CardProps) {
       // FIXME: LLMs have told me this is not a perfect cloning but a shallow one which may cause a problem
       const superset = { ...prev };
       const focusedCard = superset.state.focusedCard;
+
+      // // if the song is new (for example, from search results) add it to the collection
+      // if (!songState[song.id]) {
+      //   songDispatch({ type: "ADD_SONG", song: song });
+      // }
 
       if (status === "onPlay") {
         songDispatch({ type: "UPDATE_STATUS", status: "onPlay", id: song.id });
@@ -61,10 +65,6 @@ export function Card({ data, cardWidth }: CardProps) {
       } else
         songDispatch({ type: "UPDATE_STATUS", status: "onPause", id: song.id });
 
-      // if the song is new (from search results) add it to the collection
-      if (!songState[song.id]) {
-        songDispatch({ type: "ADD_SONG", song: song });
-      }
 
       superset.state.focusedCard = focusedCard;
       return superset;

@@ -2,7 +2,7 @@ import { X } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { type CardTag, type CardType } from "../sections/CardSet";
 import { useTagDispatch } from "../context/TagProvider";
-import { useSongDispatch } from "../context/SongProvider";
+import { useSongDispatch, useSongState } from "../context/SongProvider";
 
 type ActionOption = "add" | "remove" | "none";
 
@@ -64,18 +64,22 @@ export function DropDown({ data, tags, onClick }: DropDownProps) {
 
   const tagDispatch = useTagDispatch();
   const songDispatch = useSongDispatch();
+  const songState = useSongState();
   
   const handleDropdownClick = (song: CardType, option: DropDownOption) => {
     if (option.kind !== "mutable") return;
+
+    // if the song is new (from search results) add it to the collection
+    if (!songState[song.id]) {
+      songDispatch({ type: "ADD_SONG", song: song });
+    }
 
     if (option.action === "add") {
       songDispatch({ type: "ADD_TAG", tag: option.key, id: song.id });
       if (option.key === "q")
         tagDispatch({ type: "APPEND", tag: option.key, id: song.id });
-      else
-        tagDispatch({ type: "PREPEND", tag: option.key, id: song.id });
-    }
-    else {
+      else tagDispatch({ type: "PREPEND", tag: option.key, id: song.id });
+    } else {
       songDispatch({ type: "REMOVE_TAG", tag: option.key, id: song.id });
       tagDispatch({ type: "REMOVE", tag: option.key, id: song.id });
     }

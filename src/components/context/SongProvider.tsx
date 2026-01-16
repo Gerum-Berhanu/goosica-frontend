@@ -1,5 +1,5 @@
 import { createContext, useContext, useReducer, type Dispatch } from "react";
-import { initSongsById, type OrderById } from "./songContextTools";
+import { initSongsById, orderById, type OrderById } from "./songContextTools";
 import type { CardStatus, CardTag, CardType } from "../sections/CardSet";
 
 type SongContextType = OrderById;
@@ -7,6 +7,7 @@ type SongContextType = OrderById;
 // Actions
 type SongAction =
   | { type: "ADD_SONG"; song: CardType }
+  | { type: "ADD_SONGS"; songs: CardType[] }
   | { type: "ADD_TAG"; tag: CardTag; id: string }
   | { type: "REMOVE_TAG"; tag: CardTag; id: string }
   | { type: "UPDATE_STATUS"; status: CardStatus; id: string };
@@ -18,6 +19,12 @@ function songReducer(state: SongContextType, action: SongAction) {
       return {
         ...state,
         [action.song.id]: action.song,
+      };
+
+    case "ADD_SONGS":
+      return {
+        ...state,
+        ...orderById(action.songs),
       };
 
     case "ADD_TAG":
