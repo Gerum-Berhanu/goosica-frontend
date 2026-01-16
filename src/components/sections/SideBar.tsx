@@ -1,9 +1,11 @@
 import { useCardSet } from "../../App";
+import { useSongState } from "../context/SongProvider";
 import { Card } from "../ui/Card";
 import { LyricsBody } from "../ui/LyricsBody";
 
 export function SideBar() {
   const [contextData, ] = useCardSet();
+  const songState = useSongState();
 
   return (
     <div className="bg-slate-200 md:grid grid-rows-9 gap-4 hidden p-4 w-[300px]">
@@ -17,7 +19,7 @@ export function SideBar() {
       <div className="flex justify-center items-center row-span-3 w-[250px]">
         {contextData.state.focusedCard.id ? (
           <Card
-            data={contextData.order[contextData.state.focusedCard.id]}
+            data={songState[contextData.state.focusedCard.id]}
           />
         ) : (
           <div className="text-gray-500">No song is selected.</div>

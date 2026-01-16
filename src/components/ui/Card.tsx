@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import Slider from "rc-slider";
 import { AudioContext } from "../context/AudioProvider";
+import { useSongDispatch, useSongState } from "../context/SongProvider";
 
 interface CardProps {
   data: CardType;
@@ -37,6 +38,8 @@ export function Card({ data, cardWidth }: CardProps) {
   }, [data.title]);
 
   const [contextData, setContextData] = useCardSet();
+  const songState = useSongState();
+  const songDispatch = useSongDispatch();
 
   const handleStatus = (song: CardType, status: CardStatus) => {
     setContextData((prev) => {
@@ -45,21 +48,21 @@ export function Card({ data, cardWidth }: CardProps) {
       const focusedCard = superset.state.focusedCard;
 
       if (status === "onPlay") {
+        // if another song was playing previously, reset everything related to it
         if (focusedCard.isFocused && focusedCard.id !== song.id) {
-          superset.order[focusedCard.id].status = "onNone";
+          songDispatch({ type: "UPDATE_STATUS", status: "onNone", id: focusedCard.id });
         }
         focusedCard.isFocused = true;
         focusedCard.id = song.id;
         focusedCard.timeline = 0; // currently this has no use
       }
 
-      // if the song is new (from search results) add it to the superset
-      if (!superset.order[song.id]) {
-        superset.order[song.id] = song;
+      // if the song is new (from search results) add it to the collection
+      if (!songState[song.id]) {
+        songDispatch({ type: "ADD_SONG", song: song });
       }
 
       superset.state.focusedCard = focusedCard;
-      superset.order[song.id].status = status;
       return superset;
     });
   };

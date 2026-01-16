@@ -4,6 +4,7 @@ import { useContext, useEffect } from "react";
 import type { CardStatus, CardType } from "./CardSet";
 import { useCardSet } from "../../App";
 import { AudioContext } from "../context/AudioProvider";
+import { useSongState, useSongDispatch } from "../context/SongProvider";
 
 function formatTime(seconds: number | undefined): string {
   if (seconds === undefined || isNaN(seconds)) return "0:00";
@@ -19,7 +20,10 @@ function formatTime(seconds: number | undefined): string {
 
 export function PlayBar() {
   const [contextData, setContextData] = useCardSet();
-  const currentSong = contextData.order[contextData.state.focusedCard.id];
+  const songState = useSongState();
+  const songDispatch = useSongDispatch();
+
+  const currentSong = songState[contextData.state.focusedCard.id];
 
   const handleStatus = (song: CardType, status: CardStatus) => {
     setContextData((prev) => {
@@ -30,20 +34,19 @@ export function PlayBar() {
       if (status === "onPlay") {
         // if another song was playing previously, reset everything related to it
         if (focusedCard.isFocused && focusedCard.id !== song.id) {
-          superset.order[focusedCard.id].status = "onNone";
+          songDispatch({ type: "UPDATE_STATUS", status: "onNone", id: focusedCard.id });
           focusedCard.timeline = 0;
         }
         focusedCard.isFocused = true;
         focusedCard.id = song.id;
       }
 
-      // if the song is new (from search results) add it to the superset
-      if (!superset.order[song.id]) {
-        superset.order[song.id] = song;
+      // if the song is new (from search results) add it to the collection
+      if (!songState[song.id]) {
+        songDispatch({ type: "ADD_SONG", song: song });
       }
 
       superset.state.focusedCard = focusedCard;
-      superset.order[song.id].status = status;
       return superset;
     });
   };
