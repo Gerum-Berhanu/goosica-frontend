@@ -29,15 +29,6 @@ export const initSearchResult: CardType[] = [
     selector: "search"
   },
   {
-    id: "S104",
-    title: "Zenith",
-    uploader: "Kavinsky",
-    imagePath: "./zenith-cover.jpg",
-    tags: [],
-    status: "onNone",
-    selector: "search"
-  },
-  {
     id: "A104",
     title: "Lonely Night",
     uploader: "The Weeknd",
@@ -50,7 +41,7 @@ export const initSearchResult: CardType[] = [
 
 export const secondSearchResult: CardType[] = [
   {
-    id: "S105",
+    id: "S104",
     title: "Zenith",
     uploader: "Kavinsky",
     imagePath: "./zenith-cover.jpg",
@@ -59,7 +50,7 @@ export const secondSearchResult: CardType[] = [
     selector: "search"
   },
   {
-    id: "S106",
+    id: "S105",
     title: "Zenith",
     uploader: "Kavinsky",
     imagePath: "./zenith-cover.jpg",

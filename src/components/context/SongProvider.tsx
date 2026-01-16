@@ -9,6 +9,7 @@ type SongAction =
   | { type: "ADD_SONG"; song: CardType }
   | { type: "ADD_SONGS"; songs: CardType[] }
   | { type: "ADD_TAG"; tag: CardTag; id: string }
+  | { type: "CLEAN_SEARCH" }
   | { type: "REMOVE_TAG"; tag: CardTag; id: string }
   | { type: "UPDATE_STATUS"; status: CardStatus; id: string };
 
@@ -35,6 +36,11 @@ function songReducer(state: SongContextType, action: SongAction) {
           tags: [...state[action.id].tags, action.tag],
         },
       };
+
+    case "CLEAN_SEARCH": {
+        const prevSearchIds = Object.values(state).filter(c => c.selector === "search").map(c => c.id);
+        return Object.fromEntries(Object.entries(state).filter(([key,]) => !prevSearchIds.includes(key)));
+    }
 
     case "REMOVE_TAG":
       return {

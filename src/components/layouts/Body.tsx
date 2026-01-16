@@ -4,14 +4,15 @@ import { NavBar } from "../sections/NavBar";
 import { SearchResult } from "../sections/SearchResult";
 import { PlayBar } from "../sections/PlayBar";
 import { useCardSet } from "../../App";
-import { useSearchDispatch } from "../context/SearchProvider";
-import { secondSearchResult } from "../context/searchContextTools";
+import { secondSearchResult } from "../context/searchEntry";
+import { useSongDispatch } from "../context/SongProvider";
 
 export function Body() {
     const [ isSearched, setIsSearched ] = useState(false);
     const [ query, setQuery ] = useState("");
     const [ contextData, ] = useCardSet();
-    const searchDispatch = useSearchDispatch();
+    
+    const songDispatch = useSongDispatch();
 
     const handleSearch = (s: string | undefined) => {
       if (!s)
@@ -19,10 +20,14 @@ export function Body() {
       
       setQuery(s);
 
+      // cleaning previously searched values
+      songDispatch({ type: "CLEAN_SEARCH" });
+
       // fetching data based on the provided query
-      searchDispatch({ type: "NEW_SEARCH", result: secondSearchResult });
+      songDispatch({ type: "ADD_SONGS", songs: secondSearchResult })
 
       setIsSearched(true);
+      console.log("Body > handleSearch");
     }
 
     const handleReturn = () => {

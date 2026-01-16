@@ -4,7 +4,6 @@ import {SideBar} from "./components/sections/SideBar";
 import { superset, type SuperSet } from "./components/utils/devToolkit";
 import { AudioProvider } from "./components/context/AudioProvider";
 import { TagProvider } from "./components/context/TagProvider";
-import { SearchProvider, SearchSongHydrator } from "./components/context/SearchProvider";
 import { SongProvider } from "./components/context/SongProvider";
 
 export const CardSetContext = createContext<[SuperSet, Dispatch<SetStateAction<SuperSet>>] | null>(null);
@@ -22,10 +21,9 @@ function App() {
 
   return (
     <AudioProvider>
-      <SearchProvider>
         <SongProvider>
           <TagProvider>
-            <SearchSongHydrator/>
+            {/* <SearchSongHydrator/> */}
             <CardSetContext value={[contextData, setContextData]}>
               <div className="flex h-lvh w-full">
                 <SideBar/>
@@ -34,7 +32,6 @@ function App() {
             </CardSetContext>
           </TagProvider>
         </SongProvider>
-      </SearchProvider>
     </AudioProvider>
   );
 }
