@@ -32,14 +32,18 @@ export function PlayBar() {
       const focusedCard = superset.state.focusedCard;
 
       if (status === "onPlay") {
+        songDispatch({ type: "UPDATE_STATUS", status: "onPlay", id: song.id });
+        
         // if another song was playing previously, reset everything related to it
         if (focusedCard.isFocused && focusedCard.id !== song.id) {
           songDispatch({ type: "UPDATE_STATUS", status: "onNone", id: focusedCard.id });
           focusedCard.timeline = 0;
         }
+
         focusedCard.isFocused = true;
         focusedCard.id = song.id;
-      }
+      } else
+        songDispatch({ type: "UPDATE_STATUS", status: "onPause", id: song.id });
 
       // if the song is new (from search results) add it to the collection
       if (!songState[song.id]) {
