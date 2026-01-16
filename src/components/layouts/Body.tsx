@@ -4,11 +4,14 @@ import { NavBar } from "../sections/NavBar";
 import { SearchResult } from "../sections/SearchResult";
 import { PlayBar } from "../sections/PlayBar";
 import { useCardSet } from "../../App";
+import { useSearchDispatch } from "../context/SearchProvider";
+import { secondSearchResult } from "../context/searchContextTools";
 
 export function Body() {
     const [ isSearched, setIsSearched ] = useState(false);
     const [ query, setQuery ] = useState("");
     const [ contextData, ] = useCardSet();
+    const searchDispatch = useSearchDispatch();
 
     const handleSearch = (s: string | undefined) => {
       if (!s)
@@ -17,6 +20,7 @@ export function Body() {
       setQuery(s);
 
       // fetching data based on the provided query
+      searchDispatch({ type: "NEW_SEARCH", result: secondSearchResult });
 
       setIsSearched(true);
     }

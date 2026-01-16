@@ -8,6 +8,7 @@ export const initSearchResult: CardType[] = [
     imagePath: "./zenith-cover.jpg",
     tags: [],
     status: "onNone",
+    selector: "search"
   },
   {
     id: "S102",
@@ -16,6 +17,7 @@ export const initSearchResult: CardType[] = [
     imagePath: "./zenith-cover.jpg",
     tags: [],
     status: "onNone",
+    selector: "search"
   },
   {
     id: "S103",
@@ -24,6 +26,7 @@ export const initSearchResult: CardType[] = [
     imagePath: "./zenith-cover.jpg",
     tags: [],
     status: "onNone",
+    selector: "search"
   },
   {
     id: "S104",
@@ -32,7 +35,20 @@ export const initSearchResult: CardType[] = [
     imagePath: "./zenith-cover.jpg",
     tags: [],
     status: "onNone",
+    selector: "search"
   },
+  {
+    id: "A104",
+    title: "Lonely Night",
+    uploader: "The Weeknd",
+    imagePath: "./starboy-album-thumbnail.jpg",
+    tags: ["t", "q"],
+    status: "onNone",
+    selector: "search"
+  },
+];
+
+export const secondSearchResult: CardType[] = [
   {
     id: "S105",
     title: "Zenith",
@@ -40,6 +56,7 @@ export const initSearchResult: CardType[] = [
     imagePath: "./zenith-cover.jpg",
     tags: [],
     status: "onNone",
+    selector: "search"
   },
   {
     id: "S106",
@@ -48,5 +65,6 @@ export const initSearchResult: CardType[] = [
     imagePath: "./zenith-cover.jpg",
     tags: [],
     status: "onNone",
+    selector: "search"
   },
 ];

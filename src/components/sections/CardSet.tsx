@@ -21,6 +21,7 @@ export interface CardType {
   cardWidth?: string;
   tags: CardTag[];
   status?: CardStatus;
+  selector?: string;
 };
 
 export function CardSetContainer() {

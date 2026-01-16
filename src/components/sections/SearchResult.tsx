@@ -1,7 +1,6 @@
 import { Card } from "../ui/Card";
 import { ChevronsLeft } from "lucide-react";
 import type { CardType } from "./CardSet";
-import { useSearch } from "../context/SearchProvider";
 import { useSongState } from "../context/SongProvider";
 
 interface SearchResultProps {
@@ -51,16 +50,15 @@ function SearchRow({ title, cards, showReturnButton = false, onReturn }: SearchR
 }
 
 export function SearchResult({ query, onReturn }: SearchResultProps) {
-  const searchIds = useSearch().map(c => c.id);
   const songState = useSongState();
   
-  const cards = searchIds.map(id => songState[id]);
+  const searchCards = Object.values(songState).filter(song => song.selector === "search");
 
   return (
     <div className="flex flex-col gap-4 px-2 py-4">
       <SearchRow
         title={`Search result for "${query}"`}
-        cards={cards}
+        cards={searchCards}
         showReturnButton={true}
         onReturn={onReturn}
       />
