@@ -1,10 +1,11 @@
 import Slider from "rc-slider";
 import { ArrowLeftToLine, ArrowRightToLine, Pause, Play } from "lucide-react";
-import { useContext } from "react";
+import { useContext, useLayoutEffect, useRef, useState } from "react";
 import type { CardStatus, CardType } from "./CardSet";
 import { AudioContext } from "../context/AudioProvider";
 import { useSongState, useSongDispatch } from "../context/SongProvider";
 import { useFocusedCard } from "../context/FocusedCardProvider";
+import Marquee from "react-fast-marquee";
 
 function formatTime(seconds: number | undefined): string {
   if (seconds === undefined || isNaN(seconds)) return "0:00";
@@ -53,6 +54,44 @@ export function PlayBar() {
     });
   };
 
+  // [START] Marquee functionality for card title and uploader
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // for card title
+  const textRefTitle = useRef<HTMLSpanElement>(null);
+  const [shouldMarqueeTitle, setShouldMarqueeTitle] = useState(false);
+
+  useLayoutEffect(() => {
+    const raf = requestAnimationFrame(() => {
+      const container = containerRef.current;
+      const text = textRefTitle.current;
+  
+      if (!container || !text) return;
+  
+      setShouldMarqueeTitle(text.scrollWidth > container.clientWidth);
+    });
+
+    return (() => cancelAnimationFrame(raf));
+  }, [currentSong.title]);
+
+  const textRefUploader = useRef<HTMLSpanElement>(null);
+  const [shouldMarqueeUploader, setShouldMarqueeUploader] = useState(false);
+
+  // for card uploader
+  useLayoutEffect(() => {
+    const raf = requestAnimationFrame(() => {
+      const container = containerRef.current;
+      const text = textRefUploader.current;
+  
+      if (!container || !text) return;
+  
+      setShouldMarqueeUploader(text.scrollWidth > container.clientWidth);
+    });
+
+    return (() => cancelAnimationFrame(raf));
+  }, [currentSong.uploader]);
+  // [END]
+
   return (
     <div className="bg-slate-200 md:hidden flex shadow-md-all w-full">
       <div className="grid grid-cols-5 grid-flow-row w-full">
@@ -63,12 +102,38 @@ export function PlayBar() {
         ></div>
 
         {/* row 1, col 2 */}
-        <div className="col-span-2">
+        {/* Marquee logic here */}
+        <div ref={containerRef} className="col-span-2">
           <div className="flex flex-col items-start px-2">
-            <span className="text-md whitespace-nowrap">
-              {currentSong.title}
-            </span>
-            <span className="text-xs">{currentSong.uploader}</span>
+            {/* [Title] measurement node */}
+            <span ref={textRefTitle} className="absolute invisible text-md whitespace-nowrap">{currentSong.title}</span>
+
+            {/* [Title] presentation node */}
+            {shouldMarqueeTitle ? (
+              <Marquee gradient={false} speed={50} pauseOnHover={true} pauseOnClick={true}>
+                <span ref={textRefTitle} className="text-md whitespace-nowrap">
+                  {currentSong.title}
+                  <span className="px-4">·</span>
+                </span>
+              </Marquee>
+            ) : (
+              <span className="text-md whitespace-nowrap">{currentSong.title}</span>
+            )}
+
+            {/* [Uploader] measurement node */}
+            <span ref={textRefUploader} className="absolute invisible text-xs">{currentSong.uploader}</span>
+
+            {/* [Uploader] presentation node */}
+            {shouldMarqueeUploader ? (
+              <Marquee gradient={false} speed={50} pauseOnHover={true} pauseOnClick={true}>
+                <span className="text-xs">
+                  {currentSong.uploader}
+                  <span className="px-4">·</span>
+                </span>
+              </Marquee>
+            ) : (
+              <span className="text-xs">{currentSong.uploader}</span>
+            )}
           </div>
         </div>
 
