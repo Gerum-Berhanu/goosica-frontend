@@ -34,9 +34,9 @@ export function Body() {
     }
 
     return (
-      <div className="bg-slate-200 flex flex-col justify-between h-full overflow-y-auto w-full">
+      <div className="bg-slate-200 flex flex-col h-full overflow-y-auto w-full">
         <NavBar onSearch={handleSearch} />
-        <div className="overflow-y-auto">
+        <div className="flex-grow overflow-y-auto">
           {isSearched ? (
             // SearchResult
             <SearchResult query={query} onReturn={handleReturn} />

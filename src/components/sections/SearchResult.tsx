@@ -20,6 +20,7 @@ const tempData: CardType = {
   title: "Zenith",
   uploader: "Kavinsky",
   imagePath: "./zenith-cover.jpg",
+  src: "./Oblivion.src",
   tags: [],
   status: "onNone",
 };
