@@ -22,7 +22,7 @@ const rawCollection: CardType[] = [
   {
     id: "A103",
     title: "Don't Stop Till You Get Enough",
-    uploader: "Michael Jackson",
+    uploader: "Hurray! The 80's Track is Back Once Again",
     imagePath: "./off-the-wall-album-thumbnail.jpg",
     src: "./RetroMan.mp3",
     tags: ["t"],
@@ -39,7 +39,7 @@ const rawCollection: CardType[] = [
   },
   {
     id: "A105",
-    title: "Starboy",
+    title: "How Do I Make You Love Me x Take My Breath",
     uploader: "The Weeknd",
     imagePath: "./starboy-album-thumbnail.jpg",
     src: "./RetroMan.mp3",
@@ -49,7 +49,7 @@ const rawCollection: CardType[] = [
   {
     id: "A106",
     title: "Love to Lay",
-    uploader: "The Weeknd",
+    uploader: "State of The Art with The Weeknd",
     imagePath: "./starboy-album-thumbnail.jpg",
     src: "./RetroMan.mp3",
     tags: ["t", "q", "d"],

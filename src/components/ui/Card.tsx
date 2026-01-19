@@ -24,19 +24,45 @@ export function Card({ data, cardWidth }: CardProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [isEllipsisClicked, setEllipsisClicked] = useState(false);
 
+  // [START] Marquee functionality for card title and uploader
   const containerRef = useRef<HTMLDivElement>(null);
-  const textRef = useRef<HTMLSpanElement>(null);
-  const [shouldMarquee, setShouldMarquee] = useState(false);
+
+  // for card title
+  const textRefTitle = useRef<HTMLSpanElement>(null);
+  const [shouldMarqueeTitle, setShouldMarqueeTitle] = useState(false);
 
   useLayoutEffect(() => {
-    const container = containerRef.current;
-    const text = textRef.current;
+    const raf = requestAnimationFrame(() => {
+      const container = containerRef.current;
+      const text = textRefTitle.current;
+  
+      if (!container || !text) return;
+  
+      setShouldMarqueeTitle(text.scrollWidth > container.clientWidth);
+    });
 
-    if (!container || !text) return;
-
-    setShouldMarquee(text.scrollWidth > container.clientWidth);
+    return (() => cancelAnimationFrame(raf));
   }, [data.title]);
 
+  const textRefUploader = useRef<HTMLSpanElement>(null);
+  const [shouldMarqueeUploader, setShouldMarqueeUploader] = useState(false);
+
+  // for card uploader
+  useLayoutEffect(() => {
+    const raf = requestAnimationFrame(() => {
+      const container = containerRef.current;
+      const text = textRefUploader.current;
+  
+      if (!container || !text) return;
+  
+      setShouldMarqueeUploader(text.scrollWidth > container.clientWidth);
+    });
+
+    return (() => cancelAnimationFrame(raf));
+  }, [data.uploader]);
+  // [END]
+
+  
   const [, setFocusedCard] = useFocusedCard();
   const songDispatch = useSongDispatch();
 
@@ -76,7 +102,6 @@ export function Card({ data, cardWidth }: CardProps) {
         cardWidth || "w-[150px] md:w-[250px]"
       )}
     >
-
       {/* ROW 1 - Thumbnail display */}
       <div
         className={cn(
@@ -173,25 +198,51 @@ export function Card({ data, cardWidth }: CardProps) {
           )}
         </div>
 
-        {shouldMarquee ? (
+        {/* Marquee logic henceforth */}
+
+        {/* [Title] measurement node */}
+        <span
+          ref={textRefTitle}
+          className="absolute invisible text-md md:text-xl px-4 whitespace-nowrap"
+        >
+          {data.title}
+        </span>
+
+        {/* [Title] presentation node */}
+        {shouldMarqueeTitle ? (
           <Marquee gradient={false} speed={50} pauseOnHover={true}>
-            <span
-              ref={textRef}
-              className="text-md md:text-xl px-4 whitespace-nowrap"
-            >
+            <span className="text-md md:text-xl whitespace-nowrap">
               {data.title}
+              <span className="px-4">·</span>
             </span>
           </Marquee>
         ) : (
-          <span
-            ref={textRef}
-            className="text-md md:text-xl px-4 whitespace-nowrap"
-          >
+          <span className="text-md md:text-xl px-4 whitespace-nowrap">
             {data.title}
           </span>
         )}
 
-        <span className="text-xs md:text-sm">{data.uploader}</span>
+        {/* [Uploader] measurement node */}
+        <span
+          ref={textRefUploader}
+          className="absolute invisible text-xs md:text-sm whitespace-nowrap"
+        >
+          {data.uploader}
+        </span>
+
+        {/* [Uploader] presentation node */}
+        {shouldMarqueeUploader ? (
+          <Marquee gradient={false} speed={50} pauseOnHover={true}>
+            <span className="text-xs md:text-sm whitespace-nowrap">
+              {data.uploader}
+              <span className="px-4">·</span>
+            </span>
+          </Marquee>
+        ) : (
+          <span className="text-xs md:text-sm whitespace-nowrap">
+            {data.uploader}
+          </span>
+        )}
       </div>
     </div>
   );
