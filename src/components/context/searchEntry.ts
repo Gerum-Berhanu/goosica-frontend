@@ -6,36 +6,40 @@ export const initSearchResult: CardType[] = [
     title: "Zenith",
     uploader: "Kavinsky",
     imagePath: "./zenith-cover.jpg",
+    src: "./Oblivion.mp3",
     tags: [],
+    selector: "search",
     status: "onNone",
-    selector: "search"
   },
   {
     id: "S102",
     title: "Zenith",
     uploader: "Kavinsky",
     imagePath: "./zenith-cover.jpg",
+    src: "./Oblivion.mp3",
     tags: [],
+    selector: "search",
     status: "onNone",
-    selector: "search"
   },
   {
     id: "S103",
     title: "Zenith",
     uploader: "Kavinsky",
     imagePath: "./zenith-cover.jpg",
+    src: "./Oblivion.mp3",
     tags: [],
+    selector: "search",
     status: "onNone",
-    selector: "search"
   },
   {
     id: "A104",
     title: "Lonely Night",
     uploader: "The Weeknd",
     imagePath: "./starboy-album-thumbnail.jpg",
+    src: "./Oblivion.mp3",
     tags: ["t", "q"],
+    selector: "search",
     status: "onNone",
-    selector: "search"
   },
 ];
 
@@ -45,17 +49,19 @@ export const secondSearchResult: CardType[] = [
     title: "Zenith",
     uploader: "Kavinsky",
     imagePath: "./zenith-cover.jpg",
+    src: "./Oblivion.mp3",
     tags: [],
+    selector: "search",
     status: "onNone",
-    selector: "search"
   },
   {
     id: "S105",
     title: "Zenith",
     uploader: "Kavinsky",
     imagePath: "./zenith-cover.jpg",
+    src: "./Oblivion.mp3",
     tags: [],
+    selector: "search",
     status: "onNone",
-    selector: "search"
   },
 ];

@@ -4,6 +4,7 @@ interface AudioContextType {
   audioRef: React.RefObject<HTMLAudioElement | null>;
   currentTime: number;
   duration: number;
+  load: (src: string) => void;
   seek: (time: number) => void;
 }
 
@@ -30,6 +31,13 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
+  const load = (src: string) => {
+    if (!audioRef.current) return;
+    audioRef.current.src = src;
+    setCurrentTime(0)
+    audioRef.current.play();
+  }
+
   const seek = (time: number) => {
     if (!audioRef.current) return;
     audioRef.current.currentTime = time;
@@ -37,9 +45,9 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <AudioContext value={{ audioRef, currentTime, duration, seek }}>
+    <AudioContext value={{ audioRef, currentTime, duration, load, seek }}>
       {children}
-      <audio ref={audioRef} src="./RetroMan.mp3" preload="metadata"/>
+      <audio ref={audioRef} preload="metadata"/>
     </AudioContext>
   )
 }

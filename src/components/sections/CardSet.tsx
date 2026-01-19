@@ -18,10 +18,11 @@ export interface CardType {
   title: string;
   uploader: string;
   imagePath: string;
-  cardWidth?: string;
+  src: string;
   tags: CardTag[];
-  status?: CardStatus;
+  cardWidth?: string;
   selector?: string;
+  status?: CardStatus;
 };
 
 export function CardSetContainer() {

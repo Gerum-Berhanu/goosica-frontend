@@ -41,6 +41,10 @@ export function PlayBar() {
           audio.seek(0); // resetting the timeline whenever a new song is selected
         }
 
+        // if this is the first ever selection or there is a change in music, load a new audio src
+        if (!cloneFocused.isFocused || cloneFocused.id !== song.id)
+          audio.load(song.src);
+
         cloneFocused = {...cloneFocused, isFocused: true, id: song.id};
       } else
         songDispatch({ type: "UPDATE_STATUS", status: "onPause", id: song.id });
