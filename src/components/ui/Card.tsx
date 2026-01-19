@@ -75,6 +75,10 @@ export function Card({ data, cardWidth }: CardProps) {
 
       if (status === "onPlay") {
         songDispatch({ type: "UPDATE_STATUS", status: "onPlay", id: song.id });
+
+        // add the song to the recently played set
+        if (!song.tags.includes("t"))
+          songDispatch({ type: "ADD_TAG", tag: "t", id: song.id })
         
         // if another song was playing previously, reset everything related to it
         if (cloneFocused.isFocused && cloneFocused.id !== song.id) {

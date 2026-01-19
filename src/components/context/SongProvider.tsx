@@ -38,8 +38,25 @@ function songReducer(state: SongContextType, action: SongAction) {
       };
 
     case "CLEAN_SEARCH": {
-        const prevSearchIds = Object.values(state).filter(c => c.selector === "search").map(c => c.id);
-        return Object.fromEntries(Object.entries(state).filter(([key,]) => !prevSearchIds.includes(key)));
+      return Object.values(state).reduce((acc, c) => {
+        // If it's NOT a search card, keep as-is
+        if (c.selector !== "search") {
+          acc[c.id] = c;
+          return acc;
+        }
+
+        // If it is a search card and has tags, reset selector
+        if (c.tags.length > 0) {
+          acc[c.id] = {
+            ...c,
+            selector: "none",
+          };
+          return acc;
+        }
+        
+        // If it is a search card and has NO tags, drop it (do nothing, clean it)
+        return acc;
+      }, {} as typeof state);
     }
 
     case "REMOVE_TAG":

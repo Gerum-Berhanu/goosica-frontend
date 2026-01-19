@@ -3,7 +3,7 @@ import { CardSetContainer } from "../sections/CardSet";
 import { NavBar } from "../sections/NavBar";
 import { SearchResult } from "../sections/SearchResult";
 import { PlayBar } from "../sections/PlayBar";
-import { secondSearchResult } from "../context/searchEntry";
+import { initSearchResult, secondSearchResult } from "../context/searchEntry";
 import { useSongDispatch } from "../context/SongProvider";
 import { useFocusedCard } from "../context/FocusedCardProvider";
 
@@ -24,7 +24,10 @@ export function Body() {
       songDispatch({ type: "CLEAN_SEARCH" });
 
       // fetching data based on the provided query
-      songDispatch({ type: "ADD_SONGS", songs: secondSearchResult })
+      if (s === "2")
+        songDispatch({ type: "ADD_SONGS", songs: secondSearchResult })
+      else
+        songDispatch({ type: "ADD_SONGS", songs: initSearchResult })
 
       setIsSearched(true);
     }
