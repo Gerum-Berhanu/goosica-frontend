@@ -1,7 +1,7 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import type { CardType } from "../sections/CardSet";
-import { useSongState } from "../context/SongProvider";
+import type { OrderById } from "../context/songContextTools";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -15,7 +15,6 @@ export const generateId = () => {
   );
 };
 
-export function findSongById(id: string): CardType | undefined {
-  const songsById = useSongState();
-  return songsById[id];
+export function findSongById(set: OrderById, id: string): CardType | undefined {
+  return set[id];
 }

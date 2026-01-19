@@ -1,6 +1,6 @@
 import { Card } from "../ui/Card";
-import { findSongById } from "../utils/devToolkit";
 import { useTagState } from "../context/TagProvider";
+import { useSongState } from "../context/SongProvider";
 
 export type CardTag = "t" | "q" | "f" | "d";
 
@@ -26,9 +26,10 @@ export interface CardType {
 };
 
 export function CardSetContainer() {
-  const headings: CardTag[] = ["t", "q", "f", "d"];
-
+  const songsById = useSongState();
   const tagGroup = useTagState();
+
+  const headings: CardTag[] = ["t", "q", "f", "d"];
   
   return (
     <div className="flex flex-col gap-4 px-2 py-4">
@@ -49,8 +50,8 @@ export function CardSetContainer() {
               {
                 tagGroup[tag] && tagGroup[tag].length > 0 ?
                 tagGroup[tag]
-                  .map(id => findSongById(id))
-                  .filter((song): song is CardType => song !== undefined)
+                  .map(id => songsById[id])
+                  .filter(Boolean) // Boolean(value) returns the truthy value
                   .map(song =>
                     <Card
                       key={`${song.id}-${tag}`}
