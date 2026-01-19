@@ -81,10 +81,10 @@ export function PlayBar() {
                 className="cursor-pointer"
                 stroke="black"
                 onClick={() => {
+                  handleStatus(currentSong, "onPlay");
                   if (!audio.audioRef.current) return;
                   const currentAudio = audio.audioRef.current;
                   currentAudio.play();
-                  handleStatus(currentSong, "onPlay");
                 }}
               />
             ) : (
@@ -92,10 +92,10 @@ export function PlayBar() {
                 className="cursor-pointer"
                 stroke="black"
                 onClick={() => {
+                  handleStatus(currentSong, "onPause");
                   if (!audio.audioRef.current) return;
                   const currentAudio = audio.audioRef.current;
                   currentAudio.pause();
-                  handleStatus(currentSong, "onPause");
                 }}
               />
             )}

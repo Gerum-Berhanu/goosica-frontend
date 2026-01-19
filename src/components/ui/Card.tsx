@@ -116,10 +116,10 @@ export function Card({ data, cardWidth }: CardProps) {
             <Pause
               className="cursor-pointer"
               onClick={() => {
+                handleStatus(data, "onPause");
                 if (!audio.audioRef.current) return;
                 const currentAudio = audio.audioRef.current;
                 currentAudio.pause();
-                handleStatus(data, "onPause");
               }}
               stroke="white"
             />
@@ -128,10 +128,10 @@ export function Card({ data, cardWidth }: CardProps) {
             <Play
               className="cursor-pointer"
               onClick={() => {
+                handleStatus(data, "onPlay");
                 if (!audio.audioRef.current) return;
                 const currentAudio = audio.audioRef.current;
                 currentAudio.play();
-                handleStatus(data, "onPlay");
               }}
               stroke="white"
             />
