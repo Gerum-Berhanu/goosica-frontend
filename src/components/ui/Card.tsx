@@ -1,7 +1,7 @@
 import { cn } from "../utils/devToolkit";
 import { DropDown } from "./DropDown";
 import Marquee from "react-fast-marquee";
-import { useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useContext, useLayoutEffect, useRef, useState } from "react";
 import { type CardStatus, type CardType } from "../sections/CardSet";
 import {
   ArrowLeftToLine,
@@ -37,8 +37,11 @@ export function Card({ data, cardWidth }: CardProps) {
     setShouldMarquee(text.scrollWidth > container.clientWidth);
   }, [data.title]);
 
-  const [focusedCard, setFocusedCard] = useFocusedCard();
+  const [, setFocusedCard] = useFocusedCard();
   const songDispatch = useSongDispatch();
+
+  const audio = useContext(AudioContext);
+  if (!audio) return;
 
   const handleStatus = (song: CardType, status: CardStatus) => {
     setFocusedCard((prev) => {
@@ -50,6 +53,7 @@ export function Card({ data, cardWidth }: CardProps) {
         // if another song was playing previously, reset everything related to it
         if (cloneFocused.isFocused && cloneFocused.id !== song.id) {
           songDispatch({ type: "UPDATE_STATUS", status: "onNone", id: cloneFocused.id });
+          audio.seek(0); // resetting the timeline whenever a new song is selected
         }
 
         cloneFocused = {...cloneFocused, isFocused: true, id: song.id};
@@ -59,14 +63,6 @@ export function Card({ data, cardWidth }: CardProps) {
       return cloneFocused;
     });
   };
-
-  const audio = useContext(AudioContext);
-  if (!audio) return;
-
-  // resetting the timeline whenever a new song is selected
-  useEffect(()=>{
-    audio.seek(0);
-  }, [focusedCard.id]);
 
   return (
     <div

@@ -1,6 +1,6 @@
 import Slider from "rc-slider";
 import { ArrowLeftToLine, ArrowRightToLine, Pause, Play } from "lucide-react";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import type { CardStatus, CardType } from "./CardSet";
 import { AudioContext } from "../context/AudioProvider";
 import { useSongState, useSongDispatch } from "../context/SongProvider";
@@ -25,6 +25,9 @@ export function PlayBar() {
 
   const currentSong = songState[focusedCard.id];
 
+  const audio = useContext(AudioContext);
+  if (!audio) return;
+
   const handleStatus = (song: CardType, status: CardStatus) => {
     setFocusedCard((prev) => {
       let cloneFocused = {...prev};
@@ -35,6 +38,7 @@ export function PlayBar() {
         // if another song was playing previously, reset everything related to it
         if (focusedCard.isFocused && focusedCard.id !== song.id) {
           songDispatch({ type: "UPDATE_STATUS", status: "onNone", id: focusedCard.id });
+          audio.seek(0); // resetting the timeline whenever a new song is selected
         }
 
         cloneFocused = {...cloneFocused, isFocused: true, id: song.id};
@@ -44,14 +48,6 @@ export function PlayBar() {
       return cloneFocused;
     });
   };
-
-  const audio = useContext(AudioContext);
-  if (!audio) return;
-
-  // resetting the timeline whenever a new song is selected
-  useEffect(() => {
-    audio.seek(0);
-  }, [currentSong.id]);
 
   return (
     <div className="bg-slate-200 md:hidden flex shadow-md-all w-full">
