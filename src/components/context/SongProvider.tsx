@@ -23,11 +23,22 @@ function songReducer(state: SongContextType, action: SongAction) {
       };
 
     case "ADD_SONGS":
-      return {
-        ...state,
-        ...orderById(action.songs),
-      };
+      // if one of the new songs to be added already exist in the local database, merge them
+      // identify the identities to merge from both sides
+      const existingSongsId = Object.values(state).map(c => c.id);
+      const newSongs = action.songs.map(c => {
+        // if the new song is NOT already in the local database, just include it
+        if (!existingSongsId.includes(c.id))
+          return c;
+        // take everything from the existing one, and jus the selector value from the new one
+        return { ...state[c.id], selector: c.selector}
+      });
 
+      return {
+          ...state,
+          ...orderById(newSongs),
+        };
+      
     case "ADD_TAG":
       return {
         ...state,

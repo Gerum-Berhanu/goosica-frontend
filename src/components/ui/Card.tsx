@@ -14,6 +14,7 @@ import Slider from "rc-slider";
 import { AudioContext } from "../context/AudioProvider";
 import { useSongDispatch } from "../context/SongProvider";
 import { useFocusedCard } from "../context/FocusedCardProvider";
+import { useTagDispatch } from "../context/TagProvider";
 
 interface CardProps {
   data: CardType;
@@ -65,6 +66,7 @@ export function Card({ data, cardWidth }: CardProps) {
   
   const [, setFocusedCard] = useFocusedCard();
   const songDispatch = useSongDispatch();
+  const tagDispatch = useTagDispatch();
 
   const audio = useContext(AudioContext);
   if (!audio) return;
@@ -77,8 +79,11 @@ export function Card({ data, cardWidth }: CardProps) {
         songDispatch({ type: "UPDATE_STATUS", status: "onPlay", id: song.id });
 
         // add the song to the recently played set
-        if (!song.tags.includes("t"))
-          songDispatch({ type: "ADD_TAG", tag: "t", id: song.id })
+        if (!song.tags.includes("t")) {
+          console.log("added to recently played.")
+          songDispatch({ type: "ADD_TAG", tag: "t", id: song.id });
+          tagDispatch({ type: "APPEND", tag: "t", id: song.id });
+        }
         
         // if another song was playing previously, reset everything related to it
         if (cloneFocused.isFocused && cloneFocused.id !== song.id) {
