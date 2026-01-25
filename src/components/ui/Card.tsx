@@ -1,7 +1,7 @@
 import { cn } from "../utils/devToolkit";
 import { DropDown } from "./DropDown";
 import Marquee from "react-fast-marquee";
-import { useContext, useLayoutEffect, useRef, useState } from "react";
+import { useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { type CardStatus, type CardType } from "../sections/CardSet";
 import {
   ArrowLeftToLine,
@@ -102,6 +102,22 @@ export function Card({ data, cardWidth }: CardProps) {
     });
   };
 
+  // card play buttons display on click
+  const [displayControl, setDisplayControl] = useState<Boolean>(false);
+  const controlContainer = useRef<HTMLDivElement>(null);
+  useEffect(()=>{
+    const handleClickOutside = (event: MouseEvent) => {
+      if (controlContainer.current && !controlContainer.current.contains(event.target as Node))
+        setDisplayControl(false);
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [displayControl]);
+
   return (
     <div
       className={cn(
@@ -111,16 +127,20 @@ export function Card({ data, cardWidth }: CardProps) {
     >
       {/* ROW 1 - Thumbnail display */}
       <div
+        ref={controlContainer}
         className={cn(
           "grid grid-rows-1 relative",
           !cardWidth ? "w-[150px] md:w-[250px]" : null,
         )}
-        onMouseEnter={() => {
-          setIsHovered(true);
+        onClick={() => {
+          setDisplayControl(true);
         }}
-        onMouseLeave={() => {
-          setIsHovered(false);
-        }}
+        // onMouseEnter={() => {
+        //   setIsHovered(true);
+        // }}
+        // onMouseLeave={() => {
+        //   setIsHovered(false);
+        // }}
       >
         {/* DropDown list feature is implemented here */}
         <button
@@ -140,7 +160,8 @@ export function Card({ data, cardWidth }: CardProps) {
         <div
           className={cn(
             "absolute bg-black/50 grid grid-cols-3 h-full items-center justify-items-center w-full z-10",
-            !isHovered && "hidden",
+            // !isHovered && "hidden",
+            !displayControl && "hidden",
           )}
         >
           <ArrowLeftToLine className="cursor-pointer" stroke="white" />
