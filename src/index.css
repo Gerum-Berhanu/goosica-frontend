@@ -1,9 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Tagesschrift&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Tagesschrift&display=swap'); */
 @import "tailwindcss";
 
-* {
+/* * {
   font-family: "Tagesschrift";
-}
+} */
 
 @layer base {
 

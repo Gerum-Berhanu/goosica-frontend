@@ -4,7 +4,7 @@ import { NavBar } from "../sections/NavBar";
 import { SearchResult } from "../sections/SearchResult";
 import { PlayBar } from "../sections/PlayBar";
 import { initSearchResult, secondSearchResult } from "../context/searchEntry";
-import { useSongDispatch, useSongState } from "../context/SongProvider";
+import { useSongDispatch } from "../context/SongProvider";
 import { useFocusedCard } from "../context/FocusedCardProvider";
 
 export function Body() {
@@ -12,9 +12,7 @@ export function Body() {
     const [ query, setQuery ] = useState("");
     const [focusedCard,] = useFocusedCard();
     
-    const songState = useSongState();
     const songDispatch = useSongDispatch();
-    console.log(songState)
 
     const handleSearch = (s: string | undefined) => {
       if (!s)
@@ -23,7 +21,6 @@ export function Body() {
       setQuery(s);
 
       // cleaning previously searched values
-      console.log("cleaning search")
       songDispatch({ type: "CLEAN_SEARCH" });
 
       // fetching data based on the provided query

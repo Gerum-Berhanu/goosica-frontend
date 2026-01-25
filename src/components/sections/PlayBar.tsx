@@ -108,7 +108,7 @@ export function PlayBar() {
             {/* [Title] measurement node */}
             <span ref={textRefTitle} className="absolute invisible text-md whitespace-nowrap">{currentSong.title}</span>
 
-            {/* [Title] presentation node */}
+            {/* [Title] presentation node */} 
             {shouldMarqueeTitle ? (
               <Marquee gradient={false} speed={50} pauseOnHover={true} pauseOnClick={true}>
                 <span ref={textRefTitle} className="text-md whitespace-nowrap">

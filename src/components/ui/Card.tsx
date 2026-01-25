@@ -80,7 +80,6 @@ export function Card({ data, cardWidth }: CardProps) {
 
         // add the song to the recently played set
         if (!song.tags.includes("t")) {
-          console.log("added to recently played.")
           songDispatch({ type: "ADD_TAG", tag: "t", id: song.id });
           tagDispatch({ type: "APPEND", tag: "t", id: song.id });
         }
@@ -105,17 +104,16 @@ export function Card({ data, cardWidth }: CardProps) {
 
   return (
     <div
-      ref={containerRef}
       className={cn(
         "bg-zinc-50 grid grid-rows-[100px_auto] md:grid-rows-[150px_auto] overflow-x-hidden rounded-xl shadow-md/25 shrink-0",
-        cardWidth || "w-[150px] md:w-[250px]"
+        cardWidth || "w-[150px] md:w-[250px]",
       )}
     >
       {/* ROW 1 - Thumbnail display */}
       <div
         className={cn(
           "grid grid-rows-1 relative",
-          !cardWidth ? "w-[150px] md:w-[250px]" : null
+          !cardWidth ? "w-[150px] md:w-[250px]" : null,
         )}
         onMouseEnter={() => {
           setIsHovered(true);
@@ -142,7 +140,7 @@ export function Card({ data, cardWidth }: CardProps) {
         <div
           className={cn(
             "absolute bg-black/50 grid grid-cols-3 h-full items-center justify-items-center w-full z-10",
-            !isHovered && "hidden"
+            !isHovered && "hidden",
           )}
         >
           <ArrowLeftToLine className="cursor-pointer" stroke="white" />
@@ -178,16 +176,17 @@ export function Card({ data, cardWidth }: CardProps) {
           style={{ backgroundImage: `url(${data.imagePath})` }}
           className={cn(
             "bg-contain bg-center bg-no-repeat bg-black",
-            "flex items-end"
+            "flex items-end",
           )}
         ></div>
       </div>
 
       {/* ROW 2 - Title and uploader display */}
       <div
+        ref={containerRef}
         className={cn(
           "flex flex-col flex-nowrap gap-2 items-center justify-center p-2 relative",
-          !cardWidth ? "w-[150px] md:w-[250px]" : null
+          !cardWidth ? "w-[150px] md:w-[250px]" : null,
         )}
       >
         <div className="absolute inset-x-0 top-0 p-0 w-full">
