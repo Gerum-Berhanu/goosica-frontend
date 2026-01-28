@@ -22,7 +22,7 @@ interface CardProps {
 }
 
 export function Card({ data, cardWidth }: CardProps) {
-  const [isHovered, setIsHovered] = useState(false);
+  // const [isHovered, setIsHovered] = useState(false);
   const [isEllipsisClicked, setEllipsisClicked] = useState(false);
 
   // [START] Marquee functionality for card title and uploader
