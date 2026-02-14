@@ -1,20 +1,13 @@
 import { cn } from "../utils/devToolkit";
 import { DropDown } from "./DropDown";
 import Marquee from "react-fast-marquee";
-import { useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { type CardStatus, type CardType } from "../sections/CardSet";
-import {
-  ArrowLeftToLine,
-  ArrowRightToLine,
-  EllipsisVertical,
-  Pause,
-  Play,
-} from "lucide-react";
+import { useContext, useEffect, useRef, useState } from "react";
+import { type CardType } from "../sections/CardSet";
+import { ArrowLeftToLine, ArrowRightToLine, EllipsisVertical, Pause, Play } from "lucide-react";
 import Slider from "rc-slider";
 import { AudioContext } from "../context/AudioProvider";
-import { useSongDispatch } from "../context/SongProvider";
-import { useFocusedCard } from "../context/FocusedCardProvider";
-import { useTagDispatch } from "../context/TagProvider";
+import { usePlaybackActions } from "../../hooks/usePlaybackActions";
+import { useShouldMarquee } from "../../hooks/useShouldMarquee";
 
 interface CardProps {
   data: CardType;
@@ -22,101 +15,31 @@ interface CardProps {
 }
 
 export function Card({ data, cardWidth }: CardProps) {
-  // const [isHovered, setIsHovered] = useState(false);
   const [isEllipsisClicked, setEllipsisClicked] = useState(false);
+  const [displayControl, setDisplayControl] = useState<boolean>(false);
 
-  // [START] Marquee functionality for card title and uploader
   const containerRef = useRef<HTMLDivElement>(null);
-
-  // for card title
   const textRefTitle = useRef<HTMLSpanElement>(null);
-  const [shouldMarqueeTitle, setShouldMarqueeTitle] = useState(false);
-
-  useLayoutEffect(() => {
-    const raf = requestAnimationFrame(() => {
-      const container = containerRef.current;
-      const text = textRefTitle.current;
-  
-      if (!container || !text) return;
-  
-      setShouldMarqueeTitle(text.scrollWidth > container.clientWidth);
-    });
-
-    return (() => cancelAnimationFrame(raf));
-  }, [data.title]);
-
   const textRefUploader = useRef<HTMLSpanElement>(null);
-  const [shouldMarqueeUploader, setShouldMarqueeUploader] = useState(false);
-
-  // for card uploader
-  useLayoutEffect(() => {
-    const raf = requestAnimationFrame(() => {
-      const container = containerRef.current;
-      const text = textRefUploader.current;
-  
-      if (!container || !text) return;
-  
-      setShouldMarqueeUploader(text.scrollWidth > container.clientWidth);
-    });
-
-    return (() => cancelAnimationFrame(raf));
-  }, [data.uploader]);
-  // [END]
-
-  
-  const [, setFocusedCard] = useFocusedCard();
-  const songDispatch = useSongDispatch();
-  const tagDispatch = useTagDispatch();
-
-  const audio = useContext(AudioContext);
-  if (!audio) return;
-
-  const handleStatus = (song: CardType, status: CardStatus) => {
-    setFocusedCard((prev) => {
-      let cloneFocused = {...prev};
-
-      if (status === "onPlay") {
-        songDispatch({ type: "UPDATE_STATUS", status: "onPlay", id: song.id });
-
-        // add the song to the recently played set
-        if (!song.tags.includes("t")) {
-          songDispatch({ type: "ADD_TAG", tag: "t", id: song.id });
-          tagDispatch({ type: "APPEND", tag: "t", id: song.id });
-        }
-        
-        // if another song was playing previously, reset everything related to it
-        if (cloneFocused.isFocused && cloneFocused.id !== song.id) {
-          songDispatch({ type: "UPDATE_STATUS", status: "onNone", id: cloneFocused.id });
-          audio.seek(0); // resetting the timeline whenever a new song is selected
-        }
-        
-        // if this is the first ever selection or there is a change in music, load a new audio src
-        if (!cloneFocused.isFocused || cloneFocused.id !== song.id)
-          audio.load(song.src);
-
-        cloneFocused = {...cloneFocused, isFocused: true, id: song.id};
-      } else
-        songDispatch({ type: "UPDATE_STATUS", status: "onPause", id: song.id });
-
-      return cloneFocused;
-    });
-  };
-
-  // card play buttons display on click
-  const [displayControl, setDisplayControl] = useState<Boolean>(false);
   const controlContainer = useRef<HTMLDivElement>(null);
-  useEffect(()=>{
+
+  const shouldMarqueeTitle = useShouldMarquee(containerRef, textRefTitle, data.title);
+  const shouldMarqueeUploader = useShouldMarquee(containerRef, textRefUploader, data.uploader);
+
+  const { handleStatus, handleNext, handlePrevious } = usePlaybackActions();
+  const audioContext = useContext(AudioContext);
+
+  useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (controlContainer.current && !controlContainer.current.contains(event.target as Node))
+      if (controlContainer.current && !controlContainer.current.contains(event.target as Node)) {
         setDisplayControl(false);
+      }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [displayControl]);
+
+  if (!audioContext) return null;
 
   return (
     <div
@@ -125,29 +48,17 @@ export function Card({ data, cardWidth }: CardProps) {
         cardWidth || "w-[150px] md:w-[250px]",
       )}
     >
-      {/* ROW 1 - Thumbnail display */}
       <div
         ref={controlContainer}
         className={cn(
           "grid grid-rows-1 relative",
           !cardWidth ? "w-[150px] md:w-[250px]" : null,
         )}
-        onClick={() => {
-          setDisplayControl(true);
-        }}
-        // onMouseEnter={() => {
-        //   setIsHovered(true);
-        // }}
-        // onMouseLeave={() => {
-        //   setIsHovered(false);
-        // }}
+        onClick={() => setDisplayControl(true)}
       >
-        {/* DropDown list feature is implemented here */}
         <button
           className="absolute cursor-pointer z-20"
-          onClick={() => {
-            setEllipsisClicked(true);
-          }}
+          onClick={() => setEllipsisClicked(true)}
         >
           <EllipsisVertical stroke="white" />
         </button>
@@ -156,53 +67,44 @@ export function Card({ data, cardWidth }: CardProps) {
           <DropDown data={data} tags={data.tags} onClick={setEllipsisClicked} />
         )}
 
-        {/* The previous, play/pause, and next buttons */}
         <div
           className={cn(
             "absolute bg-black/50 grid grid-cols-3 h-full items-center justify-items-center w-full z-10",
-            // !isHovered && "hidden",
             !displayControl && "hidden",
           )}
         >
-          <ArrowLeftToLine className="cursor-pointer" stroke="white" />
+          <ArrowLeftToLine className="cursor-pointer" stroke="white" onClick={handlePrevious} />
           {data.status === "onPlay" ? (
             <Pause
               className="cursor-pointer"
               onClick={() => {
                 handleStatus(data, "onPause");
-                if (!audio.audioRef.current) return;
-                const currentAudio = audio.audioRef.current;
-                currentAudio.pause();
+                audioContext.audioRef.current?.pause();
               }}
               stroke="white"
             />
           ) : (
-            // onPause or onNone
             <Play
               className="cursor-pointer"
               onClick={() => {
                 handleStatus(data, "onPlay");
-                if (!audio.audioRef.current) return;
-                const currentAudio = audio.audioRef.current;
-                currentAudio.play();
+                audioContext.audioRef.current?.play();
               }}
               stroke="white"
             />
           )}
-          <ArrowRightToLine className="cursor-pointer" stroke="white" />
+          <ArrowRightToLine className="cursor-pointer" stroke="white" onClick={handleNext} />
         </div>
 
-        {/* The actual thumbnail container */}
         <div
           style={{ backgroundImage: `url(${data.imagePath})` }}
           className={cn(
             "bg-contain bg-center bg-no-repeat bg-black",
             "flex items-end",
           )}
-        ></div>
+        />
       </div>
 
-      {/* ROW 2 - Title and uploader display */}
       <div
         ref={containerRef}
         className={cn(
@@ -214,30 +116,23 @@ export function Card({ data, cardWidth }: CardProps) {
           {data.status !== "onNone" && (
             <Slider
               min={0}
-              max={audio.audioRef.current?.duration}
-              value={audio.audioRef.current?.currentTime}
+              max={audioContext.duration || 0}
+              value={audioContext.currentTime}
               onChange={(value) => {
-                if (typeof value === "number" && audio.audioRef.current) {
-                  audio.audioRef.current.currentTime = value;
-                  // setCurrentTime(value);
-                  // contextData.state.focusedCard.timeline = currentTime;
+                if (typeof value === "number") {
+                  audioContext.seek(value);
                 }
               }}
             />
           )}
         </div>
 
-        {/* Marquee logic henceforth */}
-
-        {/* [Title] measurement node */}
         <span
           ref={textRefTitle}
           className="absolute invisible text-md md:text-xl px-4 whitespace-nowrap"
         >
           {data.title}
         </span>
-
-        {/* [Title] presentation node */}
         {shouldMarqueeTitle ? (
           <Marquee gradient={false} speed={50} pauseOnHover={true}>
             <span className="text-md md:text-xl whitespace-nowrap">
@@ -251,15 +146,12 @@ export function Card({ data, cardWidth }: CardProps) {
           </span>
         )}
 
-        {/* [Uploader] measurement node */}
         <span
           ref={textRefUploader}
           className="absolute invisible text-xs md:text-sm whitespace-nowrap"
         >
           {data.uploader}
         </span>
-
-        {/* [Uploader] presentation node */}
         {shouldMarqueeUploader ? (
           <Marquee gradient={false} speed={50} pauseOnHover={true}>
             <span className="text-xs md:text-sm whitespace-nowrap">

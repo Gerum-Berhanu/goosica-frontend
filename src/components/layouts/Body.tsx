@@ -15,19 +15,17 @@ export function Body() {
     const songDispatch = useSongDispatch();
 
     const handleSearch = (s: string | undefined) => {
-      if (!s)
-        return;
-      
-      setQuery(s);
+      const q = s?.trim();
+      if (!q) return;
 
-      // cleaning previously searched values
+      setQuery(q);
+
       songDispatch({ type: "CLEAN_SEARCH" });
 
-      // fetching data based on the provided query
-      if (s === "2")
-        songDispatch({ type: "ADD_SONGS", songs: secondSearchResult })
+      if (q === "2")
+        songDispatch({ type: "ADD_SONGS", songs: secondSearchResult });
       else
-        songDispatch({ type: "ADD_SONGS", songs: initSearchResult })
+        songDispatch({ type: "ADD_SONGS", songs: initSearchResult });
 
       setIsSearched(true);
     }

@@ -17,8 +17,8 @@ export function useFocusedCard() {
 export function FocusedCardProvider({ children }: { children: React.ReactNode }) {
     const [focusedCard, setFocusedCard] = useState<FocusedCardType>({isFocused: false, id: ""});
     return (
-        <FocusedCardContext value={[focusedCard, setFocusedCard]}>
+        <FocusedCardContext.Provider value={[focusedCard, setFocusedCard]}>
             {children}
-        </FocusedCardContext>
+        </FocusedCardContext.Provider>
     );
 }

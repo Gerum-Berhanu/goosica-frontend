@@ -1,11 +1,12 @@
 import Slider from "rc-slider";
 import { ArrowLeftToLine, ArrowRightToLine, Pause, Play } from "lucide-react";
-import { useContext, useLayoutEffect, useRef, useState } from "react";
-import type { CardStatus, CardType } from "./CardSet";
+import { useContext, useEffect, useRef } from "react";
 import { AudioContext } from "../context/AudioProvider";
-import { useSongState, useSongDispatch } from "../context/SongProvider";
+import { useSongState } from "../context/SongProvider";
 import { useFocusedCard } from "../context/FocusedCardProvider";
 import Marquee from "react-fast-marquee";
+import { useShouldMarquee } from "../../hooks/useShouldMarquee";
+import { usePlaybackActions } from "../../hooks/usePlaybackActions";
 
 function formatTime(seconds: number | undefined): string {
   if (seconds === undefined || isNaN(seconds)) return "0:00";
@@ -13,7 +14,6 @@ function formatTime(seconds: number | undefined): string {
   const mins = Math.floor(seconds / 60);
   const secs = Math.floor(seconds % 60);
 
-  // Pad seconds with leading zero if less than 10
   const paddedSecs = secs < 10 ? `0${secs}` : secs;
 
   return `${mins}:${paddedSecs}`;
@@ -22,96 +22,42 @@ function formatTime(seconds: number | undefined): string {
 export function PlayBar() {
   const [focusedCard, setFocusedCard] = useFocusedCard();
   const songState = useSongState();
-  const songDispatch = useSongDispatch();
+  const { handleStatus, handleNext, handlePrevious } = usePlaybackActions();
+  const audio = useContext(AudioContext);
 
   const currentSong = songState[focusedCard.id];
 
-  const audio = useContext(AudioContext);
-  if (!audio) return;
-
-  const handleStatus = (song: CardType, status: CardStatus) => {
-    setFocusedCard((prev) => {
-      let cloneFocused = {...prev};
-
-      if (status === "onPlay") {
-        songDispatch({ type: "UPDATE_STATUS", status: "onPlay", id: song.id });
-        
-        // if another song was playing previously, reset everything related to it
-        if (focusedCard.isFocused && focusedCard.id !== song.id) {
-          songDispatch({ type: "UPDATE_STATUS", status: "onNone", id: focusedCard.id });
-          audio.seek(0); // resetting the timeline whenever a new song is selected
-        }
-
-        // if this is the first ever selection or there is a change in music, load a new audio src
-        if (!cloneFocused.isFocused || cloneFocused.id !== song.id)
-          audio.load(song.src);
-
-        cloneFocused = {...cloneFocused, isFocused: true, id: song.id};
-      } else
-        songDispatch({ type: "UPDATE_STATUS", status: "onPause", id: song.id });
-
-      return cloneFocused;
-    });
-  };
-
-  // [START] Marquee functionality for card title and uploader
   const containerRef = useRef<HTMLDivElement>(null);
-
-  // for card title
   const textRefTitle = useRef<HTMLSpanElement>(null);
-  const [shouldMarqueeTitle, setShouldMarqueeTitle] = useState(false);
-
-  useLayoutEffect(() => {
-    const raf = requestAnimationFrame(() => {
-      const container = containerRef.current;
-      const text = textRefTitle.current;
-  
-      if (!container || !text) return;
-  
-      setShouldMarqueeTitle(text.scrollWidth > container.clientWidth);
-    });
-
-    return (() => cancelAnimationFrame(raf));
-  }, [currentSong.title]);
-
   const textRefUploader = useRef<HTMLSpanElement>(null);
-  const [shouldMarqueeUploader, setShouldMarqueeUploader] = useState(false);
+  const shouldMarqueeTitle = useShouldMarquee(containerRef, textRefTitle, currentSong?.title ?? "");
+  const shouldMarqueeUploader = useShouldMarquee(containerRef, textRefUploader, currentSong?.uploader ?? "");
 
-  // for card uploader
-  useLayoutEffect(() => {
-    const raf = requestAnimationFrame(() => {
-      const container = containerRef.current;
-      const text = textRefUploader.current;
-  
-      if (!container || !text) return;
-  
-      setShouldMarqueeUploader(text.scrollWidth > container.clientWidth);
-    });
+  useEffect(() => {
+    if (focusedCard.isFocused && focusedCard.id && !songState[focusedCard.id]) {
+      setFocusedCard({ isFocused: false, id: "" });
+    }
+  }, [focusedCard.isFocused, focusedCard.id, songState, setFocusedCard]);
 
-    return (() => cancelAnimationFrame(raf));
-  }, [currentSong.uploader]);
-  // [END]
+  if (!audio) return null;
+  if (!currentSong) return null;
 
   return (
     <div className="bg-slate-200 md:hidden flex shadow-md-all w-full">
       <div className="grid grid-cols-5 grid-flow-row w-full">
-        {/* row 1 and 2, col 1 */}
         <div
           style={{ backgroundImage: `url(${currentSong.imagePath})` }}
           className="bg-contain bg-center bg-no-repeat bg-slate-300"
-        ></div>
+        />
 
-        {/* row 1, col 2 */}
-        {/* Marquee logic here */}
         <div ref={containerRef} className="col-span-2">
           <div className="flex flex-col items-start px-2">
-            {/* [Title] measurement node */}
-            <span ref={textRefTitle} className="absolute invisible text-md whitespace-nowrap">{currentSong.title}</span>
-
-            {/* [Title] presentation node */} 
+            <span ref={textRefTitle} className="absolute invisible text-md whitespace-nowrap">
+              {currentSong.title}
+            </span>
             {shouldMarqueeTitle ? (
               <Marquee gradient={false} speed={50} pauseOnHover={true} pauseOnClick={true}>
-                <span ref={textRefTitle} className="text-md whitespace-nowrap">
+                <span className="text-md whitespace-nowrap">
                   {currentSong.title}
                   <span className="px-4">·</span>
                 </span>
@@ -120,10 +66,9 @@ export function PlayBar() {
               <span className="text-md whitespace-nowrap">{currentSong.title}</span>
             )}
 
-            {/* [Uploader] measurement node */}
-            <span ref={textRefUploader} className="absolute invisible text-xs">{currentSong.uploader}</span>
-
-            {/* [Uploader] presentation node */}
+            <span ref={textRefUploader} className="absolute invisible text-xs">
+              {currentSong.uploader}
+            </span>
             {shouldMarqueeUploader ? (
               <Marquee gradient={false} speed={50} pauseOnHover={true} pauseOnClick={true}>
                 <span className="text-xs">
@@ -137,19 +82,16 @@ export function PlayBar() {
           </div>
         </div>
 
-        {/* row 1, col 3 */}
         <div className="col-span-2">
           <div className="flex h-full items-center justify-evenly w-full">
-            <ArrowLeftToLine className="cursor-pointer" stroke="black" />
+            <ArrowLeftToLine className="cursor-pointer" stroke="black" onClick={handlePrevious} />
             {currentSong.status === "onPause" ? (
               <Play
                 className="cursor-pointer"
                 stroke="black"
                 onClick={() => {
                   handleStatus(currentSong, "onPlay");
-                  if (!audio.audioRef.current) return;
-                  const currentAudio = audio.audioRef.current;
-                  currentAudio.play();
+                  audio.audioRef.current?.play();
                 }}
               />
             ) : (
@@ -158,32 +100,29 @@ export function PlayBar() {
                 stroke="black"
                 onClick={() => {
                   handleStatus(currentSong, "onPause");
-                  if (!audio.audioRef.current) return;
-                  const currentAudio = audio.audioRef.current;
-                  currentAudio.pause();
+                  audio.audioRef.current?.pause();
                 }}
               />
             )}
-            <ArrowRightToLine className="cursor-pointer" stroke="black" />
+            <ArrowRightToLine className="cursor-pointer" stroke="black" onClick={handleNext} />
           </div>
         </div>
 
-        {/* row 2, col 2 and 3 */}
         <div className="col-span-5 flex gap-2 items-end justify-center px-4">
           <Slider
             min={0}
-            max={audio.audioRef.current?.duration}
-            value={audio.audioRef.current?.currentTime}
+            max={audio.duration || 0}
+            value={audio.currentTime}
             onChange={(value) => {
-              if (typeof value === "number" && audio.audioRef.current) {
-                audio.audioRef.current.currentTime = value;
+              if (typeof value === "number") {
+                audio.seek(value);
               }
             }}
           />
           <div className="flex gap-1">
-            <span>{formatTime(audio.audioRef.current?.currentTime)}</span>
+            <span>{formatTime(audio.currentTime)}</span>
             <span>/</span>
-            <span>{formatTime(audio.audioRef.current?.duration)}</span>
+            <span>{formatTime(audio.duration)}</span>
           </div>
         </div>
       </div>

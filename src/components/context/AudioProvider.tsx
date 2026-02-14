@@ -33,21 +33,24 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
 
   const load = (src: string) => {
     if (!audioRef.current) return;
+    setCurrentTime(0);
+    setDuration(0);
     audioRef.current.src = src;
-    setCurrentTime(0)
-    audioRef.current.play();
+    audioRef.current.play().catch(() => {
+      // e.g. autoplay policy or missing file; ignore or surface to UI
+    });
   }
 
   const seek = (time: number) => {
     if (!audioRef.current) return;
     audioRef.current.currentTime = time;
     setCurrentTime(time);
-  }
+  };
 
   return (
-    <AudioContext value={{ audioRef, currentTime, duration, load, seek }}>
+    <AudioContext.Provider value={{ audioRef, currentTime, duration, load, seek }}>
       {children}
       <audio ref={audioRef} preload="metadata"/>
-    </AudioContext>
+    </AudioContext.Provider>
   )
 }

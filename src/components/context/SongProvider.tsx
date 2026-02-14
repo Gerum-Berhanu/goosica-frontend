@@ -113,8 +113,8 @@ export function SongProvider({ children }: { children: React.ReactNode }) {
   const [songsById, dispatch] = useReducer(songReducer, initSongsById);
 
   return (
-    <SongStateContext value={songsById}>
-      <SongDispatchContext value={dispatch}>{children}</SongDispatchContext>
-    </SongStateContext>
+    <SongStateContext.Provider value={songsById}>
+      <SongDispatchContext.Provider value={dispatch}>{children}</SongDispatchContext.Provider>
+    </SongStateContext.Provider>
   );
 }

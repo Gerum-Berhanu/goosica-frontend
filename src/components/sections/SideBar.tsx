@@ -17,10 +17,8 @@ export function SideBar() {
 
       {/* ROW 2 - Now playing card */}
       <div className="flex justify-center items-center row-span-3 w-[250px]">
-        {focusedCard.id ? (
-          <Card
-            data={songState[focusedCard.id]}
-          />
+        {focusedCard.id && songState[focusedCard.id] ? (
+          <Card data={songState[focusedCard.id]} />
         ) : (
           <div className="text-gray-500">No song is selected.</div>
         )}

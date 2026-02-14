@@ -13,6 +13,8 @@ const TAG_LABELS: Record<CardTag, string> = {
 
 export type CardStatus = "onPlay" | "onPause" | "onNone";
 
+export type CardSelector = "search" | "none";
+
 export interface CardType {
   id: string;
   title: string;
@@ -21,7 +23,7 @@ export interface CardType {
   src: string;
   tags: CardTag[];
   cardWidth?: string;
-  selector?: string;
+  selector?: CardSelector;
   status?: CardStatus;
 };
 

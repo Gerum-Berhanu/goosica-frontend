@@ -103,11 +103,11 @@ export function DropDown({ data, tags, onClick }: DropDownProps) {
         </button>
       </div>
 
-      {dropdownList.map((item, index) => (
+      {dropdownList.map((item) => (
         <button
-          key={`${index}`}
+          key={item.kind === "mutable" ? item.key : `immutable-${item.currentLabel}`}
           className="hover:bg-zinc-200 border-y cursor-pointer p-1 rounded-xl text-xs"
-          onClick={()=>handleDropdownClick(data, item)}
+          onClick={() => handleDropdownClick(data, item)}
         >
           {item.currentLabel}
         </button>

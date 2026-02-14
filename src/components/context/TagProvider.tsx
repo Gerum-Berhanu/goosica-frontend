@@ -60,10 +60,10 @@ export function TagProvider({ children }: { children: React.ReactNode }) {
   const [tagGroup, dispatch] = useReducer(tagReducer, initTagGroup);
 
   return (
-    <TagStateContext value={tagGroup}>
-      <TagDispatchContext value={dispatch}>
+    <TagStateContext.Provider value={tagGroup}>
+      <TagDispatchContext.Provider value={dispatch}>
         {children}
-      </TagDispatchContext>
-    </TagStateContext>
+      </TagDispatchContext.Provider>
+    </TagStateContext.Provider>
   )
 }
